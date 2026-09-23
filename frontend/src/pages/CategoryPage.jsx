@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import ProductCard from "../components/ProductCard";
 
 const CategoryPage = () => {
- const { fetchProductsByCategory, products } = useProductStore();
+ const { fetchProductsByCategory, products, setProducts } = useProductStore();
 
 const {category}=useParams();
 
