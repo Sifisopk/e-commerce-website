@@ -20,7 +20,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const__dirname = path.resolve();
+const __dirname = path.resolve();
 
 app.use(express.json({limit:"10mb"})); // allows parsing of JSON data in the request body
 app.use(cookieParser()); // allows parsing of cookies in the request headers
