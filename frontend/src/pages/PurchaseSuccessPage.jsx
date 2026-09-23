@@ -9,6 +9,7 @@ const PurchaseSuccessPage = () => {
 	const [isProcessing, setIsProcessing] = useState(true);
 	const { clearCart } = useCartStore();
 	const [error, setError] = useState(null);
+	const [orderId, setOrderId] = useState(null);
 
 	useEffect(() => {
 		const handleCheckoutSuccess = async (sessionId) => {
@@ -16,7 +17,14 @@ const PurchaseSuccessPage = () => {
 				await axios.post("/payments/checkout-success", {
 					sessionId,
 				});
-				clearCart();
+				
+				
+
+			// inside handleCheckoutSuccess, after the axios.post:
+			const response = await axios.post("/payments/checkout-success", { sessionId });
+			setOrderId(response.data.orderId);
+			clearCart();
+
 			} catch (error) {
 				console.log(error);
 			} finally {
@@ -66,7 +74,7 @@ const PurchaseSuccessPage = () => {
 					<div className='bg-gray-700 rounded-lg p-4 mb-6'>
 						<div className='flex items-center justify-between mb-2'>
 							<span className='text-sm text-gray-400'>Order number</span>
-							<span className='text-sm font-semibold text-emerald-400'>#12345</span>
+							<span className='text-sm font-semibold text-emerald-400'>#{orderId}</span>
 						</div>
 						<div className='flex items-center justify-between'>
 							<span className='text-sm text-gray-400'>Estimated delivery</span>

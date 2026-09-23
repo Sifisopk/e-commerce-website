@@ -9,9 +9,11 @@ const CategoryPage = () => {
 
 const {category}=useParams();
 
+
  useEffect(() => {
+    setProducts([]);
     fetchProductsByCategory(category);
- },[fetchProductsByCategory,category])
+}, [fetchProductsByCategory, category]);
 
  console.log("products:", products);
 return(
