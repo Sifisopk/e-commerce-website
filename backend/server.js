@@ -10,6 +10,9 @@ import couponRoutes from "./routes/coupon.route.js";
 import paymentRoutes from "./routes/payment.route.js";
 import analyticsRoutes from "./routes/analytics.route.js";
 
+import orderRoutes from "./routes/order.route.js";
+
+
 import { connectDB } from "./lib/db.js";
 
 dotenv.config();
@@ -47,6 +50,7 @@ app.use("/api/cart", cartRoutes)
 app.use("/api/coupons", couponRoutes)
 app.use("/api/payments", paymentRoutes)
 app.use("/api/analytics", analyticsRoutes)
+app.use("/api/orders", orderRoutes);
 
 if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "/frontend/dist")));

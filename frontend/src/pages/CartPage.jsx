@@ -6,13 +6,15 @@ import OrderSummary from "../components/OrderSummary";
 import CartItem from "../components/CartItem";
 import PeopleAlsoBought from "../components/PeopleAlsoBought";
 import GiftCouponCard from "../components/GiftCouponCard";
+import AddressCard from "../components/AddressCard";
+import { COUPONS_ENABLED } from "../config/features";
 
 
 const CartPage = () => {
 const {cart} = useCartStore();
 
 	return (
-		<div className='py-8 md:py-16'>
+		<div className='py-8 md:py-16 bg-white min-h-screen'>
 			<div className='mx-auto max-w-screen-xl px-4 2xl:px-0'>
 				<div className='mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8'>
 					<motion.div
@@ -25,9 +27,9 @@ const {cart} = useCartStore();
 							<EmptyCartUI />
 						) : (
 							<div className='space-y-6'>
-								{cart.map((item) => (
-									<CartItem key={item._id} item={item} />
-								))}
+						{cart.map((item) => (
+							<CartItem key={item.cartItemId} item={item} />
+						))}
 							</div>
 						)}
 						{cart.length > 0 && <PeopleAlsoBought />}
@@ -39,8 +41,9 @@ const {cart} = useCartStore();
 							animate={{ opacity: 1, x: 0 }}
 							transition={{ duration: 0.5, delay: 0.4 }}
 						>
+							<AddressCard />
 							<OrderSummary />
-							<GiftCouponCard /> 
+							{COUPONS_ENABLED && <GiftCouponCard />}
 						</motion.div>
 					)}
 				
@@ -59,15 +62,13 @@ const EmptyCartUI = () => (
 		transition={{ duration: 0.5 }}
 	>
 		<ShoppingCart className='h-24 w-24 text-gray-300' />
-		<h3 className='text-2xl font-semibold '>Your cart is empty</h3>
-		<p className='text-gray-400'>Looks like you {"haven't"} added anything to your cart yet.</p>
+		<h3 className='text-2xl font-semibold text-gray-900'>Your cart is empty</h3>
+		<p className='text-gray-500'>Looks like you {"haven't"} added anything to your cart yet.</p>
 		<Link
-			className='mt-4 rounded-md bg-emerald-500 px-6 py-2 text-white transition-colors hover:bg-emerald-600'
+			className='mt-4 rounded-md bg-red-600 px-6 py-2 text-white transition-colors hover:bg-red-700'
 			to='/'
 		>
 			Start Shopping
 		</Link>
 	</motion.div>
 );
-
-

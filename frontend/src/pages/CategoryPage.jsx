@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useProductStore } from "../stores/useProductStore";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { ChevronRight } from "lucide-react";
 import ProductCard from "../components/ProductCard";
 
 const CategoryPage = () => {
@@ -15,10 +16,19 @@ const {category}=useParams();
     fetchProductsByCategory(category);
 }, [fetchProductsByCategory, category]);
 
- console.log("products:", products);
 return(
     	<div className='min-h-screen'>
 			<div className='relative z-10 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-16'>
+				{/* start of breadcrumb */}
+				<nav className='flex items-center text-sm text-gray-400 mb-8 flex-wrap'>
+					<Link to='/' className='hover:text-emerald-400'>
+						Home
+					</Link>
+					<ChevronRight size={14} className='mx-2' />
+					<span className='text-gray-300 capitalize'>{category}</span>
+				</nav>
+				{/* end of breadcrumb */}
+
 				<motion.h1
 					className='text-center text-4xl sm:text-5xl font-bold text-emerald-400 mb-8'
 					initial={{ opacity: 0, y: -20 }}

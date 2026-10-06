@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useCartStore } from "../stores/useCartStore";
+import { useCheckoutStore } from "../stores/useCheckoutStore";
+import { COUPONS_ENABLED } from "../config/features";
 import { Link } from "react-router-dom";
 import { MoveRight } from "lucide-react";
 import axios from "../lib/axios";
@@ -7,6 +10,8 @@ import toast from "react-hot-toast";
 
 const OrderSummary = () => {
 	const { total, subtotal, coupon, isCouponApplied, cart } = useCartStore();
+	const { shippingAddress, getAddressError } = useCheckoutStore();
+	const [isProcessing, setIsProcessing] = useState(false);
 
 	const savings = subtotal - total;
 	const formattedSubtotal = subtotal.toFixed(2);
@@ -15,69 +20,86 @@ const OrderSummary = () => {
 
 	// start of handlePayment
 	const handlePayment = async () => {
+		if (isProcessing) return;
+
+		const addressError = getAddressError();
+		if (addressError) {
+			toast.error(addressError, { id: "address" });
+			return;
+		}
+
+		setIsProcessing(true);
 		try {
 			const res = await axios.post("/payments/create-checkout-session", {
 				products: cart,
-				couponCode: coupon ? coupon.code : null,
+				couponCode: COUPONS_ENABLED && coupon && isCouponApplied ? coupon.code : null,
+				shippingAddress,
 			});
 
 			const session = res.data;
+			if (!session?.url) {
+				toast.error("Something went wrong starting checkout");
+				return;
+			}
 			window.location.href = session.url;
 		} catch (error) {
 			toast.error(error.response?.data?.message || "Something went wrong starting checkout");
+		} finally {
+			setIsProcessing(false);
 		}
 	};
 	// end of handlePayment
 
 	return (
 		<motion.div
-			className='space-y-4 rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-sm sm:p-6'
+			className='space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6'
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.5 }}
 		>
-			<p className='text-xl font-semibold text-emerald-400'>Order summary</p>
+			<p className='text-xl font-semibold text-gray-900'>Order summary</p>
 
 			<div className='space-y-4'>
 				<div className='space-y-2'>
 					<dl className='flex items-center justify-between gap-4'>
-						<dt className='text-base font-normal text-gray-300'>Original price</dt>
-						<dd className='text-base font-medium text-white'>${formattedSubtotal}</dd>
+						<dt className='text-base font-normal text-gray-600'>Original price</dt>
+						<dd className='text-base font-medium text-gray-900'>R{formattedSubtotal}</dd>
 					</dl>
 
 					{savings > 0 && (
 						<dl className='flex items-center justify-between gap-4'>
-							<dt className='text-base font-normal text-gray-300'>Savings</dt>
-							<dd className='text-base font-medium text-emerald-400'>-${formattedSavings}</dd>
+							<dt className='text-base font-normal text-gray-600'>Savings</dt>
+							<dd className='text-base font-medium text-red-600'>-R{formattedSavings}</dd>
 						</dl>
 					)}
 
 					{coupon && isCouponApplied && (
 						<dl className='flex items-center justify-between gap-4'>
-							<dt className='text-base font-normal text-gray-300'>Coupon ({coupon.code})</dt>
-							<dd className='text-base font-medium text-emerald-400'>-{coupon.discountPercentage}%</dd>
+							<dt className='text-base font-normal text-gray-600'>Coupon ({coupon.code})</dt>
+							<dd className='text-base font-medium text-red-600'>-{coupon.discountPercentage}%</dd>
 						</dl>
 					)}
-					<dl className='flex items-center justify-between gap-4 border-t border-gray-600 pt-2'>
-						<dt className='text-base font-bold text-white'>Total</dt>
-						<dd className='text-base font-bold text-emerald-400'>${formattedTotal}</dd>
+					<dl className='flex items-center justify-between gap-4 border-t border-gray-200 pt-2'>
+						<dt className='text-base font-bold text-gray-900'>Total</dt>
+						<dd className='text-base font-bold text-red-600'>R{formattedTotal}</dd>
 					</dl>
 				</div>
 
 				<motion.button
-					className='flex w-full items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300'
+					className='flex w-full items-center justify-center rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 disabled:opacity-50'
 					whileHover={{ scale: 1.05 }}
 					whileTap={{ scale: 0.95 }}
 					onClick={handlePayment}
+					disabled={isProcessing}
 				>
-					Proceed to Checkout
+					{isProcessing ? "Processing..." : "Proceed to Checkout"}
 				</motion.button>
 
 				<div className='flex items-center justify-center gap-2'>
-					<span className='text-sm font-normal text-gray-400'>or</span>
+					<span className='text-sm font-normal text-gray-500'>or</span>
 					<Link
 						to='/'
-						className='inline-flex items-center gap-2 text-sm font-medium text-emerald-400 underline hover:text-emerald-300 hover:no-underline'
+						className='inline-flex items-center gap-2 text-sm font-medium text-red-600 underline hover:text-red-700 hover:no-underline'
 					>
 						Continue Shopping
 						<MoveRight size={16} />

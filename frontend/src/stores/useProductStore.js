@@ -4,12 +4,14 @@ import axios from "../lib/axios";
 
 export const useProductStore = create((set) => ({
     products: [],
+    currentProduct: null,
     loading: false,
 
     setProducts: (products) => {
         set({ products });
     },
 
+    // start of createProduct
     createProduct: async (productData) => {
         set({ loading: true });
 
@@ -20,11 +22,32 @@ export const useProductStore = create((set) => ({
                 products: [...prevState.products, res.data],
                 loading: false,
             }));
+            return res.data;
         } catch (error) {
             toast.error(
-                error.response?.data?.error || "Failed to create product"
+                error.response?.data?.message || "Failed to create product or file size too large,max size is 10MB"
             );
             set({ loading: false });
+            throw error;
+        }
+    },
+    // end of createProduct
+
+    updateProduct: async (productId, productData) => {
+        set({ loading: true });
+        try {
+            const res = await axios.put(`/products/${productId}`, productData);
+            set((prevState) => ({
+                products: prevState.products.map((product) =>
+                    product._id === productId ? res.data : product
+                ),
+                loading: false,
+            }));
+            return res.data;
+        } catch (error) {
+            set({ loading: false });
+            toast.error(error.response?.data?.message || "Failed to update product");
+            throw error;
         }
     },
 
@@ -53,12 +76,22 @@ export const useProductStore = create((set) => ({
 		set({ loading: true });
 		try {
 			const response = await axios.get(`/products/category/${category}`);
-			set({ products: response.data.products, loading: false });
+			set({ products: response.data, loading: false });
 		} catch (error) {
 			set({ error: "Failed to fetch products", loading: false });
 			toast.error(error.response?.data?.error || "Failed to fetch products");
 		}
 	},
+    fetchProductById: async (productId) => {
+        set({ loading: true, currentProduct: null });
+        try {
+            const response = await axios.get(`/products/${productId}`);
+            set({ currentProduct: response.data, loading: false });
+        } catch (error) {
+            set({ loading: false });
+            toast.error(error.response?.data?.message || "Failed to load product");
+        }
+    },
     deleteProduct: async (productId) => {
             set({ loading: true });
             try {
@@ -76,7 +109,6 @@ export const useProductStore = create((set) => ({
     set({ loading: true });
     try {
         const response = await axios.patch(`/products/${productId}`);
-        // this will update the isFeatured prop of the product
         set((prevProducts) => ({
             products: prevProducts.products.map((product) =>
                 product._id === productId ? { ...product, isFeatured: response.data.isFeatured } : product

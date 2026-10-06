@@ -44,64 +44,64 @@ export const useCartStore = create((set, get) => ({
       get().calculateTotals(); 
 		} catch (error) {
 			set({ cart: [] });
-			toast.error(error.response.data.message || "An error occurred");
+			toast.error(error.response?.data?.message || "An error occurred");
 		}
 	},
 
 	clearCart: async () => {
-		set({ cart: [], coupon: null, total: 0, subtotal: 0 });
+		set({ cart: [], coupon: null, total: 0, subtotal: 0, isCouponApplied: false });
 	},
 
-addToCart: async (product) => {
+	// start of addToCart with color/size
+	addToCart: async (product, options = {}) => {
+		const { quantity = 1, color = "", size = "" } = options;
 		try {
-			await axios.post("/cart", { productId: product._id });
+			await axios.post("/cart", { productId: product._id, quantity, color, size });
 			toast.success("Product added to cart");
-
-			set((prevState) => {
-				const existingItem = prevState.cart.find((item) => item._id === product._id);
-				const newCart = existingItem
-					? prevState.cart.map((item) =>
-							item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
-					  )
-					: [...prevState.cart, { ...product, quantity: 1 }];
-				return { cart: newCart };
-			});
-			get().calculateTotals();
+			await get().getCartItems();
 		} catch (error) {
-			toast.error(error.response.data.message || "An error occurred");
+			toast.error(error.response?.data?.message || "An error occurred");
 		}
 	},
+	// end of addToCart with color/size
 
-  removeFromCart: async (productId) => {
-  await axios.delete(`/cart`, { data: { productId } });
-  set((prevState) => ({ cart: prevState.cart.filter((item) => item._id !== productId) }));
-  get().calculateTotals();
-},
+  // start of removeFromCart by cart line id
+  removeFromCart: async (cartItemId) => {
+    try {
+        await axios.delete(`/cart`, { data: { cartItemId } });
+        await get().getCartItems();
+    } catch (error) {
+        toast.error(error.response?.data?.message || "An error occurred");
+    }
+  },
+  // end of removeFromCart by cart line id
 
-//update quantity of a product in cart
-updateQuantity: async (productId, quantity) => {
-		if (quantity === 0) {
-			get().removeFromCart(productId);
-			return;
+//update quantity of a specific cart line
+updateQuantity: async (cartItemId, quantity) => {
+		try {
+			if (quantity === 0) {
+				await get().removeFromCart(cartItemId);
+				return;
+			}
+			await axios.put(`/cart`, { cartItemId, quantity });
+			await get().getCartItems();
+		} catch (error) {
+			toast.error(error.response?.data?.message || "An error occurred");
 		}
-
-		await axios.put(`/cart`, { productId, quantity });
-		set((prevState) => ({
-			cart: prevState.cart.map((item) => (item._id === productId ? { ...item, quantity } : item)),
-		}));
-		get().calculateTotals();
 	},
 
 //calculate total of cart items
   calculateTotals: () => {
-		const { cart, coupon } = get();
+		const { cart, coupon, isCouponApplied } = get();
 		const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 		let total = subtotal;
 
-		if (coupon) {
+		// start of only discount when coupon is applied
+		if (coupon && isCouponApplied) {
 			const discount = subtotal * (coupon.discountPercentage / 100);
 			total = subtotal - discount;
 		}
+		// end of only discount when coupon is applied
 
 		set({ subtotal, total });
 	},

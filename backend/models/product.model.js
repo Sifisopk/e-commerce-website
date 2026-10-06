@@ -15,10 +15,24 @@ const productSchema = new mongoose.Schema(
             min:0,
             required: true
         },
-        image: {
-            type: String,
-            required: [true, "Please provide an image"]
-        },  
+        // start of images
+        images: {
+            type: [String],
+            required: [true, "Please provide at least one image"],
+            validate: {
+                validator: (arr) => Array.isArray(arr) && arr.length > 0,
+                message: "Please provide at least one image",
+            },
+        },
+        // end of images
+        colors: {
+            type: [String],
+            default: []
+        },
+        sizes: {
+            type: [String],
+            default: []
+        },
         category: {
             type: String,
             required: true
