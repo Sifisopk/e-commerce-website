@@ -9,7 +9,7 @@ const categories = [
 	{ href: "/hoodies", name: "Hoodies", imageUrl: "/hoodie.jpeg" },
 	//{ href: "/glasses", name: "Glasses", imageUrl: "/glasses.png" },
 	//{ href: "/jackets", name: "Jackets", imageUrl: "/jacket.jpeg" },
-	//{ href: "/beanies", name: "Beanies", imageUrl: "/beanie.jpeg" },
+	{ href: "/beanies", name: "Beanies", imageUrl: "/beanie.jpeg" },
 	//{ href: "/bags", name: "Bags", imageUrl: "/bags.jpg" },
 ];
 

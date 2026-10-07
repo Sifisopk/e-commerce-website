@@ -93,7 +93,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
 													flex items-center justify-center'
 												>
 													<ShoppingCart className='w-5 h-5 mr-2' />
-													{hasOptions ? "Select options" : "Add to Cart"}
+													{hasOptions ? "View details" : "Add to Cart"}
 												</button>
 											</div>
 										</div>

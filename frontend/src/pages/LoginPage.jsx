@@ -21,25 +21,25 @@ const LoginPage = () => {
   
 
   return (
-   <div className=" flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-white min-h-screen">
+   <div className="flex min-h-screen flex-col justify-center bg-white px-4 py-8 sm:px-6 lg:px-8">
         
         <motion.div
-                className="sm:mx-auto sm:w-full sm:max-w-md"
+                className="mx-auto w-full max-w-md"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8}}>
 
                     
-                <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Log into your account</h2>
+                <h2 className="mt-2 text-center text-2xl font-extrabold text-gray-900 sm:text-3xl">Log into your account</h2>
         </motion.div>
 
         <motion.div
-                className="sm:mx-auto sm:w-full sm:max-w-md"
+                className="mx-auto mt-6 w-full max-w-md"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8}}>
 
-                <div className="bg-white py-8 shadow-sm border border-gray-200 sm:rounded-lg sm:px-10">
+                <div className="bg-white px-4 py-6 shadow-sm border border-gray-200 rounded-lg sm:px-10 sm:py-8">
 
                 <form onSubmit={handleSubmit} className="space-y-6">
 

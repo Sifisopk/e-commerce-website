@@ -51,7 +51,7 @@ const ProductCard = ({product}) => {
 					onClick={handleAddToCart}
 				>
 					<ShoppingCart size={22} className='mr-2' />
-					{hasOptions ? "Select options" : "Add to cart"}
+					{hasOptions ? "View details" : "Add to cart"}
 				</button>
 			</div>
 		</div>

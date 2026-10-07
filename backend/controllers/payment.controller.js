@@ -6,6 +6,9 @@ import PendingCheckout from "../models/pendingCheckout.model.js";
 import { initializeTransaction, verifyTransaction } from "../lib/paystack.js";
 import { generateOrderNumber } from "../lib/orderNumber.js";
 
+//resend email imports
+import { sendOrderEmails } from "../lib/email.js";
+
 // start of feature flag
 const COUPONS_ENABLED = process.env.ENABLE_COUPONS === "true";
 // end of feature flag
@@ -214,6 +217,12 @@ export const checkoutSuccess = async (req,res) => {
         });
 
         await newOrder.save();
+
+        // start of send order emails
+           await sendOrderEmails({
+       order: newOrder,
+       customer: { name: req.user.name, email: req.user.email },
+   });
 
         // start of gift coupon, only now that payment is confirmed
         if(COUPONS_ENABLED && pendingCheckout.totalAmount >= 200){

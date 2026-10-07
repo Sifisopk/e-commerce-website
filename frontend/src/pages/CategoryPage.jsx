@@ -30,7 +30,7 @@ return(
 				{/* end of breadcrumb */}
 
 				<motion.h1
-					className='text-center text-4xl sm:text-5xl font-bold text-emerald-400 mb-8'
+					className='text-center text-4xl sm:text-5xl font-bold text-red-600 mb-8'
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.8 }}

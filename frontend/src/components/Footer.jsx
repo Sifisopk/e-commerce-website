@@ -56,7 +56,7 @@ const Footer = () => {
 							hello@example.com
 						</a>
 						<div className='flex gap-4'>
-							<a href='#' className='text-gray-400 hover:text-red-600'>
+							<a href='https://www.instagram.com/superfineboy2499/' className='text-gray-400 hover:text-red-600'>
 								<InstagramIcon width={20} height={20} />
 							</a>
 							<a href='#' className='text-gray-400 hover:text-red-600'>

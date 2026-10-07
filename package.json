@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "backend/server.js",
   "scripts": {
-    "dev":  "nodemon backend/server.js",
+    "dev": "nodemon backend/server.js",
     "start": "node backend/server.js",
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
@@ -21,10 +21,10 @@
     "ioredis": "^6.0.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.24.4",
+    "resend": "^6.32.1",
     "stripe": "^22.6.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
   }
 }
-
