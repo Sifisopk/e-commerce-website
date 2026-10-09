@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
             required: true,
             unique: true,
             lowercase: true,
-            tirm: true
+            trim: true // was misspelled "tirm" so emails were never trimmed
         },
         password: {
             type: String,
@@ -43,7 +43,20 @@ const userSchema = new mongoose.Schema(
             type: String,
             enum: ["customer", "admin"],
             default: "customer"
-        }
+        },
+
+        // start of email verification + password reset
+        // emailVerified has NO default on purpose: accounts created before this
+        // feature have no value (undefined) and are treated as verified.
+        // Only new signups are saved as false.
+        emailVerified: {
+            type: Boolean
+        },
+        emailVerifyToken: { type: String, select: false },   // sha256 hash of the emailed token
+        emailVerifyExpires: { type: Date, select: false },
+        resetPasswordToken: { type: String, select: false }, // sha256 hash of the emailed token
+        resetPasswordExpires: { type: Date, select: false },
+        // end of email verification + password reset
     },
     {
         timestamps: true
@@ -73,4 +86,3 @@ userSchema.methods.comparePassword = async function (password) {
 
 const User = mongoose.model("User", userSchema);
 export default User;
-

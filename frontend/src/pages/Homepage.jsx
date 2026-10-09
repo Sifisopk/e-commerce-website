@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import CategoryItem from "../components/CategoryItem";
+
 import { useProductStore } from "../stores/useProductStore";
 import FeaturedProducts from "../components/FeaturedProducts";
 
@@ -25,8 +26,9 @@ const { fetchFeaturedProducts, products, loading } = useProductStore();
 
   return (
   <div className='relative min-h-screen text-gray-900 overflow-hidden'>
-			<div className='relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16'>
-				<h1 className='text-center text-4xl sm:text-6xl font-bold text-gray-900 mb-4'>
+			<div className='relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-16'>
+				
+				<h1 className='mt-10 text-center text-4xl sm:text-6xl font-bold text-gray-900 mb-4'>
 					Explore Our <span className='text-red-600'>Categories</span>
 				</h1>
 				<p className='text-center text-lg sm:text-xl text-gray-600 mb-12'>

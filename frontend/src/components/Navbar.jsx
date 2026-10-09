@@ -5,11 +5,9 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { useUserStore } from "../stores/useUserStore";
 import { useCartStore } from "../stores/useCartStore";
+import { mailtoHref } from "../config/contact";
 
-// start of support contact (change these to your real details)
-const SUPPORT_EMAIL = "hello@example.com";
-const SUPPORT_HREF = `mailto:${SUPPORT_EMAIL}?subject=Support%20request`;
-// end of support contact
+const SUPPORT_HREF = mailtoHref("Support request"); // details live in config/contact.js
 
 const mobileItem =
     "flex w-full items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-gray-50 hover:text-red-600 transition-colors";
@@ -98,6 +96,15 @@ const Navbar = () => {
                             </Link>
                         )}
 
+                        {/* start of logged in as (desktop) */}
+                        {user && (
+                            <div className='max-w-[160px] lg:max-w-[240px] text-right leading-tight' title={user.email}>
+                                <p className='text-xs text-gray-500'>Logged in as</p>
+                                <p className='truncate text-sm font-medium text-gray-900'>{user.email}</p>
+                            </div>
+                        )}
+                        {/* end of logged in as (desktop) */}
+
                         {user ? (
                             <button
                                 className='bg-gray-900 hover:bg-black text-white py-2 px-4 rounded-md flex items-center transition duration-300 ease-in-out'
@@ -148,6 +155,15 @@ const Navbar = () => {
                                 className='absolute left-0 right-0 top-full bg-white border-b border-gray-200 shadow-lg'
                             >
                                 <div className='py-2 divide-y divide-gray-100'>
+                                    {/* start of logged in as */}
+                                    {user && (
+                                        <div className='px-4 py-3'>
+                                            <p className='text-xs text-gray-500'>Logged in as</p>
+                                            <p className='text-sm font-medium text-gray-900 break-all'>{user.email}</p>
+                                        </div>
+                                    )}
+                                    {/* end of logged in as */}
+
                                     <div>
                                         <Link to='/track-order' className={mobileItem}>
                                             <PackageSearch size={20} />
@@ -165,7 +181,7 @@ const Navbar = () => {
                                     <div>
                                         <a href={SUPPORT_HREF} className={mobileItem}>
                                             <LifeBuoy size={20} />
-                                            Contact Us
+                                            Contact Support
                                         </a>
                                     </div>
 

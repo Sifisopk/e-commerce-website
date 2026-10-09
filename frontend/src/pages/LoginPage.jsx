@@ -71,10 +71,12 @@ const LoginPage = () => {
 							<label htmlFor='password' className='block text-sm font-medium text-gray-700'>
 								Password
 							</label>
+							
 							<div className='mt-1 relative rounded-md shadow-sm'>
 								<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
 									<Lock className='h-5 w-5 text-gray-400' aria-hidden='true' />
 								</div>
+								
 								<input
 									id='password'
 									type='password'
@@ -86,6 +88,9 @@ const LoginPage = () => {
 									placeholder='••••••••'
 								/>
 							</div>
+							<div className='text-right'>
+        							 <Link to='/forgot-password' className='text-sm text-red-600 hover:text-red-700'>Forgot password?</Link>
+    							</div>
 						</div>
 
 

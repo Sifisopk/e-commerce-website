@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useCartStore } from "../stores/useCartStore";
 import axios from "../lib/axios";
 import Confetti from "react-confetti";
+import ContactSupport from "../components/ContactSupport";
 
 const PurchaseSuccessPage = () => {
 	const [isProcessing, setIsProcessing] = useState(true);
@@ -57,7 +58,10 @@ const PurchaseSuccessPage = () => {
 	if (error) {
 		return (
 			<div className='min-h-screen flex items-center justify-center bg-white px-4'>
-				<p className='text-gray-600 text-center'>{error}</p>
+				<div className='max-w-md w-full space-y-4'>
+					<p className='text-gray-600 text-center'>{error}</p>
+					<ContactSupport message="If you were charged, contact us and we'll sort it out." />
+				</div>
 			</div>
 		);
 	}
@@ -77,7 +81,7 @@ const PurchaseSuccessPage = () => {
 			<div className='max-w-md w-full bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden relative z-10'>
 				<div className='p-6 sm:p-8'>
 					<div className='flex justify-center'>
-						<CheckCircle className='text-red-600 w-16 h-16 mb-4' />
+						<CheckCircle className='text-emerald-600 w-16 h-16 mb-4' />
 					</div>
 					<h1 className='text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-2'>
 						Purchase Successful!
@@ -99,6 +103,14 @@ const PurchaseSuccessPage = () => {
 							<span className='text-sm font-semibold text-gray-900'>5-10 business days</span>
 						</div>
 					</div>
+
+					{/* start of contact support */}
+					<ContactSupport
+						className='mb-6'
+						orderNumber={orderNumber}
+						message="Haven't received your confirmation email? Keep your order number and contact us."
+					/>
+					{/* end of contact support */}
 
 					<div className='space-y-4'>
 						<button

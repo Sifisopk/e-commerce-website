@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Search, Package, Clock, Truck, CheckCircle2, XCircle, MapPin } from "lucide-react";
 import axios from "../lib/axios";
+import ContactSupport from "../components/ContactSupport";
 
 const STEPS = [
 	{ key: "pending", label: "Order placed", icon: Clock },
@@ -187,6 +188,18 @@ const TrackOrderPage = () => {
 					</motion.div>
 				)}
 				{/* end of result */}
+
+				{/* start of contact support */}
+				<ContactSupport
+					className='mt-8'
+					orderNumber={order?.orderNumber}
+					message={
+						order
+							? "Something not right with this order? Get in touch."
+							: "Can't find your order? Wrong email on file? Contact us with your order number."
+					}
+				/>
+				{/* end of contact support */}
 			</div>
 		</div>
 	);

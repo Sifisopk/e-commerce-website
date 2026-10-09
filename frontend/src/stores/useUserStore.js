@@ -24,6 +24,7 @@ export const useUserStore = create((set) => ({
             });
 
             set({ user: res.data.user, loading: false });
+            toast.success("Account created! Check your email to verify your address.")
         } catch (error) {
             set({ loading: false });
 

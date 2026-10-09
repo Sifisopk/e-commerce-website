@@ -12,6 +12,11 @@ import ProductPage from './pages/ProductPage';
 import EditProductPage from './pages/EditProductPage';
 import TrackOrderPage from './pages/TrackOrderPage';
 
+//forgot password
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import VerifyEmailPage from './pages/VerifyEmailPage';
+
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { Toaster } from 'react-hot-toast';
@@ -59,6 +64,9 @@ const {getCartItems} = useCartStore();
         <Route path='/purchase-cancel' element={user ? <PurchaseCancelPage /> : <Navigate to='/login' />} />
         <Route path='/product/:id' element={<ProductPage />} />
         <Route path='/track-order' element={<TrackOrderPage />} />
+        <Route path='/forgot-password' element={<ForgotPasswordPage />} />
+        <Route path='/reset-password/:token' element={<ResetPasswordPage />} />
+        <Route path='/verify-email/:token' element={<VerifyEmailPage />} />
       </Routes>
       </div>
       <Footer />
