@@ -91,7 +91,7 @@ const PurchaseSuccessPage = () => {
 						Thank you for your order. {"We will"} process it soon.
 					</p>
 					<p className='text-red-600 text-center text-sm mb-6'>
-						Check your email for order details and updates.
+						Check your email inbox or spam folder for order details and updates.
 					</p>
 					<div className='bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6'>
 						<div className='flex items-center justify-between mb-2'>

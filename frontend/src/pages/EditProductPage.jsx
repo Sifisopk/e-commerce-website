@@ -58,7 +58,7 @@ const EditProductPage = () => {
 				sizes: form.sizes.split(",").map((s) => s.trim()).filter(Boolean),
 			});
 			toast.success("Product updated");
-			navigate("/secret-dashboard");
+			navigate("/secret-dashboard?tab=products");
 		} catch (error) {
 			console.log("error updating product");
 		}

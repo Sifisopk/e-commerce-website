@@ -5,12 +5,12 @@ import { useProductStore } from "../stores/useProductStore";
 import FeaturedProducts from "../components/FeaturedProducts";
 
 const categories = [
-	{ href: "/sweatpants", name: "sweatpants", imageUrl: "/sweatpant.jpeg" },
+	{ href: "/sweatpants", name: "Sweatpants", imageUrl: "/sweatpant.jpeg" },
 	{ href: "/t-shirts", name: "T-shirts", imageUrl: "/t-shirt.jpeg" },
 	{ href: "/hoodies", name: "Hoodies", imageUrl: "/hoodie.jpeg" },
 	//{ href: "/glasses", name: "Glasses", imageUrl: "/glasses.png" },
 	//{ href: "/jackets", name: "Jackets", imageUrl: "/jacket.jpeg" },
-	{ href: "/beanies", name: "Beanies", imageUrl: "/beanie.jpeg" },
+	{ href: "/skullcap", name: "Skullcap", imageUrl: "/beanie.jpeg" },
 	//{ href: "/bags", name: "Bags", imageUrl: "/bags.jpg" },
 ];
 

@@ -137,7 +137,7 @@ const handleAddToCart = () => {
 						</h1>
 
 						<div className='mb-6'>
-							<span className='text-3xl font-bold text-gray-900'>
+							<span className='text-3xl font-bold text-red-600'>
 							R{currentProduct.price}
 							</span>
 						</div>
@@ -213,7 +213,7 @@ const handleAddToCart = () => {
 
 						<button
 							onClick={handleAddToCart}
-							className='flex w-full items-center justify-center rounded-lg bg-red-600 px-6 py-4 text-base font-semibold
+							className='flex w-full items-center justify-center rounded-lg bg-gray-900 px-6 py-4 text-base font-semibold
 							 text-white hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transition-colors duration-200'
 						>
 							<ShoppingCart size={20} className='mr-2' />

@@ -1,8 +1,7 @@
 import { BarChart, PlusCircle, ShoppingBasket, ClipboardList } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
-
-
+import { useSearchParams } from "react-router-dom";
 
 import AnalyticsTab from "../components/AnalyticsTab";
 import CreateProductForm from "../components/CreateProductForm";
@@ -19,8 +18,8 @@ const tabs = [
 ];
 
 const AdminPage = () => {
-
-	const [activeTab, setActiveTab] = useState("create");
+	const [searchParams, setSearchParams] = useSearchParams();
+	const activeTab = searchParams.get("tab") || "create";
 	const { fetchAllProducts } = useProductStore();
 
 	useEffect(() => {
@@ -43,7 +42,7 @@ const AdminPage = () => {
 					{tabs.map((tab) => (
 						<button
 							key={tab.id}
-							onClick={() => setActiveTab(tab.id)}
+							onClick={() => setSearchParams({ tab: tab.id })}
 							className={`flex items-center px-4 py-2 rounded-md transition-colors duration-200 ${
 								activeTab === tab.id
 									? "bg-red-600 text-white"

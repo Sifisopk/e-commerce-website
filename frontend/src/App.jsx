@@ -71,7 +71,17 @@ const {getCartItems} = useCartStore();
       </div>
       <Footer />
     </div>
-    <Toaster />
+    <Toaster
+      toastOptions={{
+        duration: 6000,
+        success: {
+          duration: 6000,
+        },
+        error: {
+          duration: 6000,
+        },
+      }}
+    />
     </div>
   )
   
