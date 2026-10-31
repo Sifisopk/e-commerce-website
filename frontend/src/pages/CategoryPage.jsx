@@ -4,6 +4,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import ProductCard from "../components/ProductCard";
+import SEO from "../components/SEO";
 
 const CategoryPage = () => {
  const { fetchProductsByCategory, products, setProducts } = useProductStore();
@@ -16,8 +17,15 @@ const {category}=useParams();
     fetchProductsByCategory(category);
 }, [fetchProductsByCategory, category]);
 
+const categoryLabel = category.charAt(0).toUpperCase() + category.slice(1);
+
 return(
     	<div className='min-h-screen'>
+			<SEO
+				title={categoryLabel}
+				description={`Shop ${categoryLabel} at Superfineboy. Quality fashion for everyone, delivered across South Africa.`}
+				url={`/category/${category}`}
+			/>
 			<div className='relative z-10 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-16'>
 				{/* start of breadcrumb */}
 				<nav className='flex items-center text-sm text-gray-400 mb-8 flex-wrap'>
@@ -35,7 +43,7 @@ return(
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.8 }}
 				>
-					{category.charAt(0).toUpperCase() + category.slice(1)}
+					{categoryLabel}
 				</motion.h1>
 
 				<motion.div

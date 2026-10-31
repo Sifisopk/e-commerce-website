@@ -1,3 +1,4 @@
+import SEO from "../components/SEO";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -73,6 +74,30 @@ const handleAddToCart = () => {
 			</div>
 		);
 	}
+
+	return (
+    <div className='min-h-screen bg-white'>
+        <SEO
+            title={currentProduct.name}
+            description={currentProduct.description}
+            image={currentProduct.images?.[0]}
+            url={`/product/${currentProduct._id}`}
+            jsonLd={{
+                "@context": "https://schema.org",
+                "@type": "Product",
+                name: currentProduct.name,
+                description: currentProduct.description,
+                image: currentProduct.images,
+                offers: {
+                    "@type": "Offer",
+                    priceCurrency: "ZAR",
+                    price: currentProduct.price,
+                    availability: "https://schema.org/InStock",
+                    url: `https://superfineboy.co.za/product/${currentProduct._id}`,
+                },
+            }}
+        />
+        <div className='relative z-10 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-12'></div>
 
 	return (
 		<div className='min-h-screen bg-white'>

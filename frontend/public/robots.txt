@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://superfineboy.co.za/sitemap.xml
