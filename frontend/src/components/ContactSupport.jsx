@@ -15,7 +15,7 @@ const ContactSupport = ({ message = "Need help?", orderNumber, className = "" })
 					className='inline-flex items-center text-sm font-medium text-red-600 hover:text-red-700'
 				>
 					<Mail size={16} className='mr-1.5' />
-					{SUPPORT_EMAIL}
+					katlegoselwane57@gmail.com
 				</a>
 				{WHATSAPP_NUMBER && (
 					<a

@@ -1,5 +1,5 @@
 // start of support contact details (change these to the shop's real details)
-export const SUPPORT_EMAIL = "hello@example.com";
+export const SUPPORT_EMAIL = "katlegoselwane57@gmail.com";
 
 // WhatsApp number in international format with no + or spaces, e.g. "27821234567".
 // Leave it as "" to hide the WhatsApp button everywhere.

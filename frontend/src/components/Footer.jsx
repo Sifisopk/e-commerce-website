@@ -51,9 +51,9 @@ const Footer = () => {
 					{/* start of contact */}
 					<div>
 						<h4 className='text-sm font-semibold text-gray-900 uppercase tracking-wide mb-3'>Get in touch</h4>
-						<a href='mailto:hello@example.com' className='flex items-center text-sm text-gray-500 hover:text-red-600 mb-3'>
+						<a href='mailto:katlegoselwane57@gmail.com' className='flex items-center text-sm text-gray-500 hover:text-red-600 mb-3'>
 							<Mail size={16} className='mr-2' />
-							hello@example.com
+							katlegoselwane57@gmail.com
 						</a>
 						<div className='flex gap-4'>
 							<a href='https://www.instagram.com/superfineboy2499/' className='text-gray-400 hover:text-red-600'>
