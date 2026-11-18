@@ -20,7 +20,17 @@ const escapeHtml = (v) =>
 
 const money = (n) => `R${Number(n).toFixed(2)}`;
 
-const appUrl = () => String(process.env.CLIENT_URL || "").replace(/\/$/, "");
+const PRODUCTION_APP_URL = "https://superfineboy.co.za";
+const appUrl = () => {
+    const clientUrl = String(process.env.CLIENT_URL || "").trim().replace(/\/+$/, "");
+    const isLocalUrl = /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?(?:\/|$)/i.test(clientUrl);
+
+    if (process.env.NODE_ENV === "production" && (!clientUrl || isLocalUrl)) {
+        return PRODUCTION_APP_URL;
+    }
+
+    return clientUrl;
+};
 
 // start of building blocks (tables + inline styles: the only layout every email app understands)
 const footerHtml = () =>
