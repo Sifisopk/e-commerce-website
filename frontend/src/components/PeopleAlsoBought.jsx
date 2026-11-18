@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
+import ProductCardSkeleton from "./ProductCardSkeleton";
 import axios from "../lib/axios";
 import toast from "react-hot-toast";
-//import LoadingSpinner from "./LoadingSpinner";
+
+const gridClass = "mt-6 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4";
 
 const PeopleAlsoBought = () => {
 	const [recommendations, setRecommendations] = useState([]);
@@ -14,7 +16,7 @@ const PeopleAlsoBought = () => {
 				const res = await axios.get("/products/recommendations");
 				setRecommendations(res.data);
 			} catch (error) {
-				toast.error(error.response.data.message || "An error occurred while fetching recommendations");
+				toast.error(error.response?.data?.message || "An error occurred while fetching recommendations");
 			} finally {
 				setIsLoading(false);
 			}
@@ -23,17 +25,17 @@ const PeopleAlsoBought = () => {
 		fetchRecommendations();
 	}, []);
 
-	//if (isLoading) return <LoadingSpinner />;
+	if (!isLoading && recommendations.length === 0) return null;
 
 	return (
-		<div className='mt-8'>
-			<h3 className='text-2xl font-semibold text-gray-900'>You may also like</h3>
-			<div className='mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg: grid-col-3'>
-				{recommendations.map((product) => (
-					<ProductCard key={product._id} product={product} />
-				))}
+		<section className='mt-14'>
+			<h2 className='font-display text-2xl font-bold tracking-tight sm:text-3xl'>You may also like</h2>
+			<div className={gridClass}>
+				{isLoading
+					? [...Array(4)].map((_, i) => <ProductCardSkeleton key={i} />)
+					: recommendations.map((product) => <ProductCard key={product._id} product={product} />)}
 			</div>
-		</div>
+		</section>
 	);
 };
 export default PeopleAlsoBought;

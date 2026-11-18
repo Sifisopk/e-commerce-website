@@ -1,26 +1,34 @@
 import SEO from "../components/SEO";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ShoppingCart, ChevronRight, Check } from "lucide-react";
+import { ShoppingCart, ChevronRight, Check, Truck, PackageSearch } from "lucide-react";
 import toast from "react-hot-toast";
 import { useProductStore } from "../stores/useProductStore";
 import { useUserStore } from "../stores/useUserStore";
 import { useCartStore } from "../stores/useCartStore";
+import { useCategoryStore } from "../stores/useCategoryStore";
 
 const ProductPage = () => {
 	const { id } = useParams();
 	const { currentProduct, fetchProductById, loading } = useProductStore();
 	const { user } = useUserStore();
 	const { addToCart } = useCartStore();
+	const { categories } = useCategoryStore();
 
 	const [activeImage, setActiveImage] = useState(0);
 	const [selectedColor, setSelectedColor] = useState("");
 	const [selectedSize, setSelectedSize] = useState("");
+	const [fetchedId, setFetchedId] = useState(null);
 
-	// start of fetch product on mount
+	// start of fetch product on mount (skeleton shows until THIS product has loaded)
 	useEffect(() => {
-		fetchProductById(id);
+		let cancelled = false;
+		fetchProductById(id).then(() => {
+			if (!cancelled) setFetchedId(id);
+		});
+		return () => {
+			cancelled = true;
+		};
 	}, [fetchProductById, id]);
 	// end of fetch product on mount
 
@@ -43,19 +51,19 @@ const handleAddToCart = () => {
 };
 
 	// start of loading skeleton
-	if (loading) {
+	if (loading || fetchedId !== id) {
 		return (
-			<div className='min-h-screen bg-white'>
-				<div className='relative z-10 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-pulse'>
-					<div className='h-4 w-64 bg-gray-200 rounded mb-8' />
-					<div className='grid grid-cols-1 lg:grid-cols-2 gap-12'>
-						<div className='h-[500px] bg-gray-200 rounded-lg' />
+			<div className='min-h-[70vh] bg-white'>
+				<div className='mx-auto max-w-7xl animate-pulse px-4 py-8 sm:px-6 sm:py-12 lg:px-8'>
+					<div className='mb-8 h-4 w-64 rounded bg-line' />
+					<div className='grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-14'>
+						<div className='aspect-[4/5] rounded-2xl bg-line' />
 						<div className='space-y-4'>
-							<div className='h-4 w-24 bg-gray-200 rounded' />
-							<div className='h-10 w-3/4 bg-gray-200 rounded' />
-							<div className='h-8 w-32 bg-gray-200 rounded' />
-							<div className='h-24 w-full bg-gray-200 rounded' />
-							<div className='h-14 w-full bg-gray-200 rounded-lg' />
+							<div className='h-4 w-24 rounded bg-line' />
+							<div className='h-10 w-3/4 rounded bg-line' />
+							<div className='h-8 w-32 rounded bg-line' />
+							<div className='h-24 w-full rounded bg-line' />
+							<div className='h-14 w-full rounded-lg bg-line' />
 						</div>
 					</div>
 				</div>
@@ -66,17 +74,20 @@ const handleAddToCart = () => {
 
 	if (!currentProduct) {
 		return (
-			<div className='min-h-screen flex flex-col items-center justify-center gap-4 bg-white'>
-				<h2 className='text-2xl text-gray-600'>Product not found</h2>
-				<Link to='/' className='text-red-600 hover:text-red-700'>
+			<div className='flex min-h-[60vh] flex-col items-center justify-center gap-4 bg-white'>
+				<h2 className='font-display text-2xl font-bold text-ink'>Product not found</h2>
+				<Link to='/' className='font-medium text-brand hover:text-brand-dark'>
 					Back to home
 				</Link>
 			</div>
 		);
 	}
 
+	const categoryName =
+		categories.find((c) => c.slug === currentProduct.category)?.name || currentProduct.category;
+
 	return (
-		<div className='min-h-screen bg-white'>
+		<div className='bg-white'>
 			<SEO
 				title={currentProduct.name}
 				description={currentProduct.description}
@@ -97,50 +108,46 @@ const handleAddToCart = () => {
 					},
 				}}
 			/>
-			<div className='relative z-10 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-12'>
+			<div className='mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8'>
 				{/* start of breadcrumb */}
-				<nav className='flex items-center text-sm text-gray-500 mb-8 flex-wrap'>
-					<Link to='/' className='hover:text-red-600'>
+				<nav className='mb-6 flex flex-wrap items-center text-sm text-muted sm:mb-8'>
+					<Link to='/' className='transition-colors hover:text-brand'>
 						Home
 					</Link>
 					<ChevronRight size={14} className='mx-2' />
 					<Link
 						to={`/category/${currentProduct.category}`}
-						className='hover:text-red-600 capitalize'
+						className='capitalize transition-colors hover:text-brand'
 					>
-						{currentProduct.category}
+						{categoryName}
 					</Link>
 					<ChevronRight size={14} className='mx-2' />
-					<span className='text-gray-900'>{currentProduct.name}</span>
+					<span className='text-ink'>{currentProduct.name}</span>
 				</nav>
 				{/* end of breadcrumb */}
 
-				<motion.div
-					className='grid grid-cols-1 lg:grid-cols-2 gap-12 items-start'
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6 }}
-				>
+				<div className='grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-14'>
 					{/* start of image gallery */}
 					<div>
-						<div className='rounded-lg overflow-hidden border border-gray-200 bg-gray-50'>
+						<div className='aspect-[5/5] max-w-[500px] overflow-hidden rounded-2xl border-2 border-line bg-surface'>
 							<img
 								src={currentProduct.images?.[activeImage]}
 								alt={currentProduct.name}
-								className='w-full h-[350px] sm:h-[500px] object-cover'
+								className='h-full w-full object-cover'
 							/>
 						</div>
 						{currentProduct.images?.length > 1 && (
-							<div className='mt-4 flex gap-3 flex-wrap'>
+							<div className='mt-4 flex flex-wrap gap-3'>
 								{currentProduct.images.map((img, index) => (
 									<button
 										key={index}
 										onClick={() => setActiveImage(index)}
-										className={`h-20 w-20 rounded-md overflow-hidden border-2 ${
-											activeImage === index ? "border-red-600" : "border-gray-200"
+										aria-label={`Show photo ${index + 1}`}
+										className={`h-20 w-20 overflow-hidden rounded-lg border-2 sm:h-[88px] sm:w-[88px] ${
+											activeImage === index ? "border-ink" : "border-transparent"
 										}`}
 									>
-										<img src={img} alt={`${currentProduct.name} ${index + 1}`} className='w-full h-full object-cover' />
+										<img src={img} alt='' className='h-full w-full object-cover' />
 									</button>
 								))}
 							</div>
@@ -149,27 +156,25 @@ const handleAddToCart = () => {
 					{/* end of image gallery */}
 
 					{/* start of details */}
-					<div className='lg:sticky lg:top-24'>
-						<p className='text-sm text-red-600 uppercase tracking-wide mb-1 capitalize'>
-							{currentProduct.category}
+					<div className='lg:sticky lg:top-28'>
+						<p className='mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand'>
+							{categoryName}
 						</p>
-						<h1 className='text-2xl sm:text-4xl font-bold text-gray-900 mb-4'>
+						<h1 className='mb-3 font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl'>
 							{currentProduct.name}
 						</h1>
 
-						<div className='mb-6'>
-							<span className='text-3xl font-bold text-red-600'>
-							R{currentProduct.price}
-							</span>
-						</div>
+						<p className='mb-5 text-3xl font-bold text-ink'>R{currentProduct.price}</p>
+
+						<p className='mb-7 leading-relaxed text-muted'>{currentProduct.description}</p>
 
 						{/* start of color selector */}
 						{currentProduct.colors?.length > 0 && (
-							<div className='mb-6'>
-								<h3 className='text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3'>
-									Color: <span className='normal-case text-gray-500'>{selectedColor}</span>
+							<div className='mb-7'>
+								<h3 className='mb-3 text-sm font-semibold text-ink'>
+									Colour: <span className='font-normal capitalize text-muted'>{selectedColor}</span>
 								</h3>
-								<div className='flex gap-3 flex-wrap'>
+								<div className='flex flex-wrap gap-3.5'>
 									{currentProduct.colors.map((color) => {
 										const isSelected = selectedColor === color;
 										return (
@@ -179,8 +184,9 @@ const handleAddToCart = () => {
 												onClick={() => setSelectedColor(color)}
 												title={color}
 												aria-label={color}
-												className={`relative h-10 w-10 rounded-full border-2 transition-transform ${
-													isSelected ? "border-red-600 scale-110" : "border-gray-300 hover:border-gray-400"
+												aria-pressed={isSelected}
+												className={`relative h-10 w-10 rounded-full ring-offset-2 transition ${
+													isSelected ? "ring-2 ring-brand" : "ring-1 ring-[#D9D6D2] hover:ring-ink"
 												}`}
 												style={{ backgroundColor: color.toLowerCase() }}
 											>
@@ -200,19 +206,19 @@ const handleAddToCart = () => {
 
 						{/* start of size selector */}
 						{currentProduct.sizes?.length > 0 && (
-							<div className='mb-6'>
-								<h3 className='text-sm font-semibold text-gray-700 uppercase tracking-wide mb-2'>
-									Size
-								</h3>
-								<div className='flex gap-2 flex-wrap'>
+							<div className='mb-8'>
+								<h3 className='mb-3 text-sm font-semibold text-ink'>Size</h3>
+								<div className='flex flex-wrap gap-2.5'>
 									{currentProduct.sizes.map((size) => (
 										<button
 											key={size}
+											type='button'
 											onClick={() => setSelectedSize(size)}
-											className={`px-4 py-2 rounded-md border text-sm uppercase transition-colors ${
+											aria-pressed={selectedSize === size}
+											className={`h-12 min-w-[56px] rounded-lg border px-4 text-sm font-semibold uppercase transition-colors ${
 												selectedSize === size
-													? "border-red-600 bg-red-50 text-red-600"
-													: "border-gray-300 text-gray-700 hover:border-gray-400"
+													? "border-ink bg-ink text-white"
+													: "border-[#D9D6D2] bg-white text-ink hover:border-ink"
 											}`}
 										>
 											{size}
@@ -223,31 +229,27 @@ const handleAddToCart = () => {
 						)}
 						{/* end of size selector */}
 
-						<div className='border-t border-gray-200 pt-6 mb-6'>
-							<h3 className='text-sm font-semibold text-gray-700 uppercase tracking-wide mb-2'>
-								Description
-							</h3>
-							<p className='text-gray-600 leading-relaxed'>
-								{currentProduct.description}
-							</p>
-						</div>
-
 						<button
 							onClick={handleAddToCart}
-							className='flex w-full items-center justify-center rounded-lg bg-gray-900 px-6 py-4 text-base font-semibold
-							 text-white hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transition-colors duration-200'
+							className='flex h-14 w-full items-center justify-center rounded-lg bg-brand text-base font-semibold text-white transition-colors hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-red-200'
 						>
 							<ShoppingCart size={20} className='mr-2' />
 							Add to cart
 						</button>
 
-						<div className='mt-6 border-t border-gray-200 pt-6 flex items-center justify-between text-sm'>
-							<span className='text-gray-500'>Sold by</span>
-							<span className='text-gray-900 font-medium'>Superfineboy</span>
-						</div>
+						<ul className='mt-6 space-y-2.5 border-t border-line pt-6 text-sm text-muted'>
+							<li className='flex items-center gap-2.5'>
+								<Truck size={18} className='shrink-0' />
+								Delivery in 5–10 business days
+							</li>
+							<li className='flex items-center gap-2.5'>
+								<PackageSearch size={18} className='shrink-0' />
+								Track your order anytime with your order number
+							</li>
+						</ul>
 					</div>
 					{/* end of details */}
-				</motion.div>
+				</div>
 			</div>
 		</div>
 	);

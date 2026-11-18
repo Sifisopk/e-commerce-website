@@ -1,7 +1,7 @@
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useCartStore } from "../stores/useCartStore";
 
+// Only shown when COUPONS_ENABLED is true in config/features.js
 const GiftCouponCard = () => {
 	const [userInputCode, setUserInputCode] = useState("");
 	const { coupon, isCouponApplied,applyCoupon, getMyCoupon, removeCoupon } = useCartStore();
@@ -25,71 +25,54 @@ const GiftCouponCard = () => {
 	};
 
 	return (
-		<motion.div
-			className='space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6'
-			initial={{ opacity: 0, y: 20 }}
-			animate={{ opacity: 1, y: 0 }}
-			transition={{ duration: 0.5, delay: 0.2 }}
-		>
-			<div className='space-y-4'>
-				<div>
-					<label htmlFor='voucher' className='mb-2 block text-sm font-medium text-gray-700'>
-						Do you have a voucher or gift card?
-					</label>
-					<input
-						type='text'
-						id='voucher'
-						className='block w-full rounded-lg border border-gray-300 bg-white 
-            p-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-red-500 
-            focus:ring-red-500'
-						placeholder='Enter code here'
-						value={userInputCode}
-						onChange={(e) => setUserInputCode(e.target.value)}
-						required
-					/>
-				</div>
-
-				<motion.button
-					type='button'
-					className='flex w-full items-center justify-center rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-200'
-					whileHover={{ scale: 1.05 }}
-					whileTap={{ scale: 0.95 }}
-					onClick={handleApplyCoupon}
-				>
-					Apply Code
-				</motion.button>
+		<div className='space-y-4 rounded-xl border border-line bg-white p-5 sm:p-6'>
+			<div>
+				<label htmlFor='voucher' className='mb-1.5 block text-[13px] font-semibold text-ink'>
+					Do you have a voucher or gift card?
+				</label>
+				<input
+					type='text'
+					id='voucher'
+					className='block h-11 w-full rounded-lg border border-[#D9D6D2] bg-white px-3 text-sm text-ink placeholder-gray-400 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand'
+					placeholder='Enter code here'
+					value={userInputCode}
+					onChange={(e) => setUserInputCode(e.target.value)}
+				/>
 			</div>
-			{isCouponApplied && coupon && (
-				<div className='mt-4'>
-					<h3 className='text-lg font-medium text-gray-900'>Applied Coupon</h3>
 
-					<p className='mt-2 text-sm text-gray-600'>
+			<button
+				type='button'
+				className='flex h-11 w-full items-center justify-center rounded-lg bg-brand text-sm font-semibold text-white transition-colors hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-red-200'
+				onClick={handleApplyCoupon}
+			>
+				Apply code
+			</button>
+
+			{isCouponApplied && coupon && (
+				<div>
+					<h3 className='font-semibold text-ink'>Applied coupon</h3>
+					<p className='mt-1 text-sm text-muted'>
 						{coupon.code} - {coupon.discountPercentage}% off
 					</p>
-
-					<motion.button
+					<button
 						type='button'
-						className='mt-2 flex w-full items-center justify-center rounded-lg bg-gray-900 
-            px-5 py-2.5 text-sm font-medium text-white hover:bg-black focus:outline-none
-             focus:ring-4 focus:ring-gray-300'
-						whileHover={{ scale: 1.05 }}
-						whileTap={{ scale: 0.95 }}
+						className='mt-3 flex h-11 w-full items-center justify-center rounded-lg border border-ink text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-white'
 						onClick={handleRemoveCoupon}
 					>
-						Remove Coupon
-					</motion.button>
+						Remove coupon
+					</button>
 				</div>
 			)}
 
 			{coupon && (
-				<div className='mt-4'>
-					<h3 className='text-lg font-medium text-gray-900'>Your Available Coupon:</h3>
-					<p className='mt-2 text-sm text-gray-600'>
+				<div>
+					<h3 className='font-semibold text-ink'>Your available coupon</h3>
+					<p className='mt-1 text-sm text-muted'>
 						{coupon.code} - {coupon.discountPercentage}% off
 					</p>
 				</div>
 			)}
-		</motion.div>
+		</div>
 	);
 };
 export default GiftCouponCard;

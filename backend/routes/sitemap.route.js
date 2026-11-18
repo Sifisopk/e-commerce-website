@@ -1,18 +1,30 @@
 import express from "express";
 import Product from "../models/product.model.js";
+import Category from "../models/category.model.js";
 
 const router = express.Router();
 
 router.get("/sitemap.xml", async (req, res) => {
     try {
-        const products = await Product.find({}, "_id updatedAt");
+        const [products, categories] = await Promise.all([
+            Product.find({}, "_id updatedAt"),
+            Category.find({}, "slug updatedAt"),
+        ]);
         const baseUrl = "https://superfineboy.co.za";
 
+        // public pages only (the cart needs a login, so search engines can't use it)
         const staticUrls = [
             { loc: "/", priority: "1.0" },
-            { loc: "/cart", priority: "0.3" },
             { loc: "/track-order", priority: "0.5" },
         ];
+
+        // start of categories (follow whatever the admin has added)
+        const categoryUrls = categories.map((c) => ({
+            loc: `/category/${c.slug}`,
+            lastmod: c.updatedAt?.toISOString().split("T")[0],
+            priority: "0.7",
+        }));
+        // end of categories
 
         const productUrls = products.map((p) => ({
             loc: `/product/${p._id}`,
@@ -20,7 +32,7 @@ router.get("/sitemap.xml", async (req, res) => {
             priority: "0.8",
         }));
 
-        const allUrls = [...staticUrls, ...productUrls];
+        const allUrls = [...staticUrls, ...categoryUrls, ...productUrls];
 
         const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

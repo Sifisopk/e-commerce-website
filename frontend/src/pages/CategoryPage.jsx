@@ -1,72 +1,85 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useProductStore } from "../stores/useProductStore";
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import ProductCard from "../components/ProductCard";
+import ProductCardSkeleton from "../components/ProductCardSkeleton";
 import SEO from "../components/SEO";
+import { useCategoryStore } from "../stores/useCategoryStore";
 
 const CategoryPage = () => {
- const { fetchProductsByCategory, products, setProducts } = useProductStore();
+ const { fetchProductsByCategory, products, setProducts, loading } = useProductStore();
+ const [loadedCategory, setLoadedCategory] = useState(null);
+ const { categories } = useCategoryStore();
 
 const {category}=useParams();
 
-
+ // start of fetch (skeleton shows until THIS category has loaded, so "No products" never flashes)
  useEffect(() => {
+    let cancelled = false;
     setProducts([]);
-    fetchProductsByCategory(category);
-}, [fetchProductsByCategory, category]);
+    fetchProductsByCategory(category).then(() => {
+        if (!cancelled) setLoadedCategory(category);
+    });
+    return () => {
+        cancelled = true;
+    };
+}, [fetchProductsByCategory, setProducts, category]);
+ // end of fetch
 
-const categoryLabel = category.charAt(0).toUpperCase() + category.slice(1);
+const isLoading = loading || loadedCategory !== category;
+const categoryLabel =
+    categories.find((c) => c.slug === category)?.name || category.charAt(0).toUpperCase() + category.slice(1);
+
+const gridClass = "grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4";
 
 return(
-    	<div className='min-h-screen'>
+    	<div className='min-h-[70vh]'>
 			<SEO
 				title={categoryLabel}
 				description={`Shop ${categoryLabel} at Superfineboy. Quality fashion for everyone, delivered across South Africa.`}
 				url={`/category/${category}`}
 			/>
-			<div className='relative z-10 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-16'>
+			<div className='mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8'>
 				{/* start of breadcrumb */}
-				<nav className='flex items-center text-sm text-gray-400 mb-8 flex-wrap'>
-					<Link to='/' className='hover:text-emerald-400'>
+				<nav className='mb-6 flex flex-wrap items-center text-sm text-muted'>
+					<Link to='/' className='transition-colors hover:text-brand'>
 						Home
 					</Link>
 					<ChevronRight size={14} className='mx-2' />
-					<span className='text-gray-300 capitalize'>{category}</span>
+					<span className='capitalize text-ink'>{category}</span>
 				</nav>
 				{/* end of breadcrumb */}
 
-				<motion.h1
-					className='text-center text-4xl sm:text-5xl font-bold text-red-600 mb-8'
-					initial={{ opacity: 0, y: -20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.8 }}
-				>
+				<h1 className='mb-8 font-display text-4xl font-bold capitalize tracking-tight sm:text-5xl'>
 					{categoryLabel}
-				</motion.h1>
+				</h1>
 
-				<motion.div
-					className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center'
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.8, delay: 0.2 }}
-				>
-					{products?.length === 0 && (
-						<h2 className='text-3xl font-semibold text-gray-300 text-center col-span-full'>
-							No products found
-						</h2>
-					)}
-
-					{products?.map((product) => (
-						<ProductCard key={product._id} product={product} />
-					))}
-				</motion.div>
+				{/* start of loading / empty / grid */}
+				{isLoading ? (
+					<div className={gridClass}>
+						{[...Array(8)].map((_, i) => (
+							<ProductCardSkeleton key={i} />
+						))}
+					</div>
+				) : products?.length === 0 ? (
+					<div className='py-16 text-center'>
+						<p className='text-xl font-semibold text-ink'>No products found</p>
+						<Link to='/#categories' className='mt-3 inline-block text-sm font-medium text-brand hover:text-brand-dark'>
+							Browse other categories
+						</Link>
+					</div>
+				) : (
+					<div className={gridClass}>
+						{products.map((product) => (
+							<ProductCard key={product._id} product={product} />
+						))}
+					</div>
+				)}
+				{/* end of loading / empty / grid */}
 			</div>
 		</div>
 );
 }
-
-
 
 export default CategoryPage

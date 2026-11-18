@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUserStore } from "../stores/useUserStore";
 import { useCartStore } from "../stores/useCartStore";
 
+// The one product card used everywhere (categories, featured, cart suggestions)
 const ProductCard = ({product}) => {
 	const { user } = useUserStore();
 	const { addToCart } = useCartStore();
@@ -12,45 +13,44 @@ const ProductCard = ({product}) => {
 	const hasOptions = product.colors?.length > 0 || product.sizes?.length > 0;
 
     const handleAddToCart = () => {
-		if (!user) {
-			toast.error("Please login to add products to cart", { id: "login" });
-			return;
-		}
-
 		// start of send shopper to pick size/colour first
 		if (hasOptions) {
-			toast("Please choose your size and colour first", { id: "options" });
 			navigate(`/product/${product._id}`);
 			return;
 		}
 		// end of send shopper to pick size/colour first
 
+		if (!user) {
+			toast.error("Please login to add products to cart", { id: "login" });
+			return;
+		}
+
 		addToCart(product);
 	};
 
   return (
-   <div className='flex w-full relative flex-col overflow-hidden rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white'>
-			<Link to={`/product/${product._id}`}>
-				<div className='relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl bg-gray-100'>
-					<img className='object-cover w-full' src={product.images?.[0]} alt='product image' />
-				</div>
+   <div className='group mx-auto flex h-full w-full max-w-[280px] flex-col overflow-hidden rounded-xl border border-line bg-white transition-shadow duration-200 hover:shadow-md'>
+			<Link to={`/product/${product._id}`} className='block overflow-hidden bg-surface'>
+				<img
+					className='aspect-[5/5] w-full object-cover transition-transform duration-300 group-hover:scale-105'
+					src={product.images?.[0]}
+					alt={product.name}
+					loading='lazy'
+				/>
 			</Link>
 
-			<div className='mt-4 px-5 pb-5'>
+			<div className='flex flex-1 flex-col p-2 sm:p-4'>
 				<Link to={`/product/${product._id}`}>
-					<h5 className='text-xl font-semibold tracking-tight text-gray-900 hover:text-red-600'>{product.name}</h5>
+					<h3 className='text-base font-semibold leading-snug text-ink transition-colors hover:text-brand sm:text-lg'>
+						{product.name}
+					</h3>
 				</Link>
-				<div className='mt-2 mb-5 flex items-center justify-between'>
-					<p>
-						<span className='text-3xl font-bold text-red-600'>R{product.price}</span>
-					</p>
-				</div>
+				<p className='mb-4 mt-1 text-lg font-bold text-brand sm:text-xl'>R{product.price}</p>
 				<button
-					className='flex items-center justify-center rounded-lg bg-gray-900 px-5 py-2.5 text-center text-sm font-medium
-					 text-white hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transition-colors duration-200'
+					className='mt-auto flex w-full items-center justify-center gap-2 rounded-lg border border-ink px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-white focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2'
 					onClick={handleAddToCart}
 				>
-					<ShoppingCart size={22} className='mr-2' />
+					<ShoppingCart size={18} />
 					{hasOptions ? "View details" : "Add to cart"}
 				</button>
 			</div>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CheckCircle, XCircle } from "lucide-react";
 import axios from "../lib/axios";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const VerifyEmailPage = () => {
 	const { token } = useParams();
@@ -28,37 +29,28 @@ const VerifyEmailPage = () => {
 		verify();
 	}, [token]);
 
-	if (status === "loading") {
-		return (
-			<div className='min-h-screen flex items-center justify-center bg-white'>
-				<div className='relative'>
-					<div className='w-16 h-16 border-red-200 border-2 rounded-full' />
-					<div className='w-16 h-16 border-red-600 border-t-2 animate-spin rounded-full absolute left-0 top-0' />
-				</div>
-			</div>
-		);
-	}
+	if (status === "loading") return <LoadingSpinner />;
 
 	const ok = status === "success";
 
 	return (
-		<div className='min-h-screen flex items-center justify-center px-4 bg-white'>
-			<div className='max-w-md w-full bg-white border border-gray-200 rounded-lg shadow-lg p-6 sm:p-8 text-center'>
+		<div className='flex min-h-[70vh] items-center justify-center px-4 py-10'>
+			<div className='w-full max-w-md rounded-2xl border border-line bg-white p-6 text-center shadow-sm sm:p-8'>
 				{ok ? (
-					<CheckCircle className='text-red-600 w-16 h-16 mb-4 mx-auto' />
+					<CheckCircle className='mx-auto mb-4 h-16 w-16 text-green-600' />
 				) : (
-					<XCircle className='text-red-600 w-16 h-16 mb-4 mx-auto' />
+					<XCircle className='mx-auto mb-4 h-16 w-16 text-brand' />
 				)}
-				<h1 className='text-2xl font-bold text-gray-900 mb-2'>{ok ? "Email verified" : "Couldn't verify"}</h1>
-				<p className='text-gray-600 mb-6'>{message}</p>
+				<h1 className='mb-2 font-display text-2xl font-bold text-ink'>{ok ? "Email verified" : "Couldn't verify"}</h1>
+				<p className='mb-6 text-muted'>{message}</p>
 				{!ok && (
-					<p className='text-sm text-gray-500 mb-6'>
+					<p className='mb-6 text-sm text-muted'>
 						If you're logged in, you can ask for a new link from your cart page.
 					</p>
 				)}
 				<Link
 					to={ok ? "/cart" : "/"}
-					className='inline-block rounded-lg bg-red-600 px-6 py-2 font-medium text-white hover:bg-red-700'
+					className='inline-block rounded-lg bg-brand px-6 py-3 font-semibold text-white transition-colors hover:bg-brand-dark'
 				>
 					{ok ? "Continue to cart" : "Back to shop"}
 				</Link>

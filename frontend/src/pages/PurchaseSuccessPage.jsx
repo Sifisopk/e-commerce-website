@@ -1,10 +1,11 @@
-import { ArrowRight, CheckCircle, HandHeart } from "lucide-react";
+import { CheckCircle, HandHeart } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useCartStore } from "../stores/useCartStore";
 import axios from "../lib/axios";
 import Confetti from "react-confetti";
 import ContactSupport from "../components/ContactSupport";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const PurchaseSuccessPage = () => {
 	const [isProcessing, setIsProcessing] = useState(true);
@@ -44,22 +45,13 @@ const PurchaseSuccessPage = () => {
 		}
 	}, [clearCart]);
 
-	if (isProcessing) {
-		return (
-			<div className='min-h-screen flex items-center justify-center bg-white'>
-				<div className='relative'>
-					<div className='w-16 h-16 border-red-200 border-2 rounded-full' />
-					<div className='w-16 h-16 border-red-600 border-t-2 animate-spin rounded-full absolute left-0 top-0' />
-				</div>
-			</div>
-		);
-	}
+	if (isProcessing) return <LoadingSpinner />;
 
 	if (error) {
 		return (
-			<div className='min-h-screen flex items-center justify-center bg-white px-4'>
-				<div className='max-w-md w-full space-y-4'>
-					<p className='text-gray-600 text-center'>{error}</p>
+			<div className='flex min-h-[70vh] items-center justify-center px-4 py-10'>
+				<div className='w-full max-w-md space-y-4'>
+					<p className='text-center text-muted'>{error}</p>
 					<ContactSupport message="If you were charged, contact us and we'll sort it out." />
 				</div>
 			</div>
@@ -67,7 +59,7 @@ const PurchaseSuccessPage = () => {
 	}
 
 	return (
-		<div className='min-h-screen flex items-center justify-center px-4 bg-white'>
+		<div className='flex min-h-[70vh] items-center justify-center px-4 py-10'>
 			<Confetti
 				width={window.innerWidth}
 				height={window.innerHeight}
@@ -75,61 +67,54 @@ const PurchaseSuccessPage = () => {
 				style={{ zIndex: 99 }}
 				numberOfPieces={700}
 				recycle={false}
-				colors={["#DC2626", "#F87171", "#1F2937", "#FFFFFF"]}
+				colors={["#D4121A", "#F87171", "#111111", "#FFFFFF"]}
 			/>
 
-			<div className='max-w-md w-full bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden relative z-10'>
-				<div className='p-6 sm:p-8'>
-					<div className='flex justify-center'>
-						<CheckCircle className='text-emerald-600 w-16 h-16 mb-4' />
+			<div className='relative z-10 w-full max-w-md rounded-2xl border border-line bg-white p-6 shadow-lg sm:p-8'>
+				<CheckCircle className='mx-auto mb-4 h-16 w-16 text-green-600' />
+				<h1 className='mb-2 text-center font-display text-3xl font-bold tracking-tight text-ink'>Purchase successful!</h1>
+
+				<p className='mb-2 text-center text-muted'>Thank you for your order. We will process it soon.</p>
+				<p className='mb-6 text-center text-sm font-medium text-brand'>
+					Check your email inbox or spam folder for order details and updates.
+				</p>
+
+				<div className='mb-6 space-y-2 rounded-xl bg-surface p-4'>
+					<div className='flex items-center justify-between'>
+						<span className='text-sm text-muted'>Order number</span>
+						<span className='text-sm font-semibold text-ink'>#{orderNumber}</span>
 					</div>
-					<h1 className='text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-2'>
-						Purchase Successful!
-					</h1>
-
-					<p className='text-gray-600 text-center mb-2'>
-						Thank you for your order. {"We will"} process it soon.
-					</p>
-					<p className='text-red-600 text-center text-sm mb-6'>
-						Check your email inbox or spam folder for order details and updates.
-					</p>
-					<div className='bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6'>
-						<div className='flex items-center justify-between mb-2'>
-							<span className='text-sm text-gray-500'>Order number</span>
-							<span className='text-sm font-semibold text-gray-900'>#{orderNumber}</span>
-						</div>
-						<div className='flex items-center justify-between'>
-							<span className='text-sm text-gray-500'>Estimated delivery</span>
-							<span className='text-sm font-semibold text-gray-900'>5-10 business days</span>
-						</div>
-					</div>
-
-					{/* start of contact support */}
-					<ContactSupport
-						className='mb-6'
-						orderNumber={orderNumber}
-						message="Haven't received your confirmation email? Keep your order number and contact us."
-					/>
-					{/* end of contact support */}
-
-					<div className='space-y-4'>
-						<button
-							className='w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4
-             rounded-lg transition duration-300 flex items-center justify-center'
-						>
-							<HandHeart className='mr-2' size={18} />
-							Thanks for trusting us!
-						</button>
-						<Link
-							to={"/"}
-							className='w-full border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-2 px-4 
-            rounded-lg transition duration-300 flex items-center justify-center'
-						>
-							Continue Shopping
-							<ArrowRight className='ml-2' size={18} />
-						</Link>
+					<div className='flex items-center justify-between'>
+						<span className='text-sm text-muted'>Estimated delivery</span>
+						<span className='text-sm font-semibold text-ink'>5-10 business days</span>
 					</div>
 				</div>
+
+				<ContactSupport
+					className='mb-6'
+					orderNumber={orderNumber}
+					message="Haven't received your confirmation email? Keep your order number and contact us."
+				/>
+
+				<div className='space-y-3'>
+					<Link
+						to='/track-order'
+						className='flex h-12 w-full items-center justify-center rounded-lg bg-brand font-semibold text-white transition-colors hover:bg-brand-dark'
+					>
+						Track your order
+					</Link>
+					<Link
+						to='/'
+						className='flex h-12 w-full items-center justify-center rounded-lg border border-ink font-semibold text-ink transition-colors hover:bg-ink hover:text-white'
+					>
+						Continue shopping
+					</Link>
+				</div>
+
+				<p className='mt-5 flex items-center justify-center gap-2 text-sm text-muted'>
+					<HandHeart size={16} />
+					Thanks for trusting us!
+				</p>
 			</div>
 		</div>
 	);

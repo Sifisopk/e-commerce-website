@@ -1,41 +1,39 @@
-import { XCircle, ArrowLeft } from "lucide-react";
-import { motion } from "framer-motion";
+import { XCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import ContactSupport from "../components/ContactSupport";
 
 const PurchaseCancelPage = () => {
     return (
-        <div className='min-h-screen flex items-center justify-center px-4 bg-white'>
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className='max-w-md w-full bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden relative z-10'
-            >
-                <div className='p-6 sm:p-8'>
-                    <div className='flex justify-center'>
-                        <XCircle className='text-red-600 w-16 h-16 mb-4' />
-                    </div>
-                    <h1 className='text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-2'>Purchase Cancelled</h1>
-                    <p className='text-gray-600 text-center mb-6'>
-                        Your order has been cancelled. No charges have been made.
-                    </p>
-                    <div className='bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6'>
-                        <p className='text-sm text-gray-500 text-center'>
-                            If you encountered any issues during the checkout process, please don&apos;t hesitate to
-                            contact our support team.
-                        </p>
-                    </div>
-                    <div className='space-y-4'>
-                        <Link
-                            to={"/"}
-                            className='w-full border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-2 px-4 rounded-lg transition duration-300 flex items-center justify-center'
-                        >
-                            <ArrowLeft className='mr-2' size={18} />
-                            Return to Shop
-                        </Link>
-                    </div>
+        <div className='flex min-h-[70vh] items-center justify-center px-4 py-10'>
+            <div className='w-full max-w-md rounded-2xl border border-line bg-white p-6 shadow-lg sm:p-8'>
+                <XCircle className='mx-auto mb-4 h-16 w-16 text-brand' />
+                <h1 className='mb-2 text-center font-display text-3xl font-bold tracking-tight text-ink'>
+                    Purchase cancelled
+                </h1>
+                <p className='mb-6 text-center text-muted'>
+                    Your order has been cancelled. No charges have been made.
+                </p>
+
+                <ContactSupport
+                    className='mb-6'
+                    message='Ran into a problem during checkout? Get in touch and we will help.'
+                />
+
+                <div className='space-y-3'>
+                    <Link
+                        to='/cart'
+                        className='flex h-12 w-full items-center justify-center rounded-lg bg-brand font-semibold text-white transition-colors hover:bg-brand-dark'
+                    >
+                        Back to cart
+                    </Link>
+                    <Link
+                        to='/'
+                        className='flex h-12 w-full items-center justify-center rounded-lg border border-ink font-semibold text-ink transition-colors hover:bg-ink hover:text-white'
+                    >
+                        Return to shop
+                    </Link>
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 };

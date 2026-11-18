@@ -14,6 +14,8 @@ import paymentRoutes from "./routes/payment.route.js";
 import analyticsRoutes from "./routes/analytics.route.js";
 
 import orderRoutes from "./routes/order.route.js";
+import settingsRoutes from "./routes/settings.route.js";
+import categoryRoutes from "./routes/category.route.js";
 
 import sitemapRoutes from "./routes/sitemap.route.js";
 
@@ -55,6 +57,8 @@ app.use("/api/coupons", couponRoutes)
 app.use("/api/payments", paymentRoutes)
 app.use("/api/analytics", analyticsRoutes)
 app.use("/api/orders", orderRoutes);
+app.use("/api/settings", settingsRoutes);
+app.use("/api/categories", categoryRoutes);
 
 app.use("/", sitemapRoutes);
 

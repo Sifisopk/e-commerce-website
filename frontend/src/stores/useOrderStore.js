@@ -23,9 +23,13 @@ export const useOrderStore = create((set) => ({
     updateOrderStatus: async (orderId, status) => {
         try {
             const response = await axios.patch(`/orders/${orderId}/status`, { status });
+            // the server replies with a bare order (no customer name/email), so only take the
+            // status fields and keep the rest of the order exactly as it was
             set((prevState) => ({
                 orders: prevState.orders.map((order) =>
-                    order._id === orderId ? response.data : order
+                    order._id === orderId
+                        ? { ...order, status: response.data.status, statusHistory: response.data.statusHistory }
+                        : order
                 ),
             }));
             toast.success("Order status updated");

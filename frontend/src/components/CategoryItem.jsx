@@ -2,23 +2,22 @@ import { Link } from "react-router-dom";
 
 const CategoryItem = ({ category }) => {
     return (
-        <div className='relative overflow-hidden h-72 sm:h-96 w-full rounded-lg group border border-gray-200'>
-            <Link to={"/category" + category.href}>
-                <div className='w-full h-full cursor-pointer'>
-                    <div className='absolute inset-0 bg-gradient-to-b from-transparent to-black/60 opacity-70 z-10' />
-                    <img
-                        src={category.imageUrl}
-                        alt={category.name}
-                        className='w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110'
-                        loading='lazy'
-                    />
-                    <div className='absolute bottom-0 left-0 right-0 p-4 z-20'>
-                        <h3 className='text-white text-2xl font-bold mb-1'>{category.name}</h3>
-                        <p className='text-gray-200 text-sm'>Explore {category.name}</p>
-                    </div>
-                </div>
-            </Link>
-        </div>
+        <Link
+            to={"/category" + category.href}
+            className='group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-surface'
+        >
+            <img
+                src={category.imageUrl}
+                alt={category.name}
+                className='h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105'
+                loading='lazy'
+            />
+            <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent' />
+            <div className='absolute inset-x-0 bottom-0 p-4 sm:p-5'>
+                <h3 className='font-display text-xl font-bold text-white sm:text-2xl'>{category.name}</h3>
+                <p className='mt-0.5 text-sm text-white/85'>Shop now →</p>
+            </div>
+        </Link>
     );
 };
 

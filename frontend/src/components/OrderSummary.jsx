@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { useCartStore } from "../stores/useCartStore";
 import { useCheckoutStore } from "../stores/useCheckoutStore";
 import { COUPONS_ENABLED } from "../config/features";
 import { Link } from "react-router-dom";
-import { MoveRight } from "lucide-react";
 import axios from "../lib/axios";
 import toast from "react-hot-toast";
 
@@ -51,62 +49,52 @@ const OrderSummary = () => {
 	// end of handlePayment
 
 	return (
-		<motion.div
-			className='space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6'
-			initial={{ opacity: 0, y: 20 }}
-			animate={{ opacity: 1, y: 0 }}
-			transition={{ duration: 0.5 }}
-		>
-			<p className='text-xl font-semibold text-gray-900'>Order summary</p>
+		<div className='rounded-xl bg-surface p-5 sm:p-6'>
+			<h2 className='mb-4 font-display text-xl font-bold text-ink'>Order summary</h2>
 
-			<div className='space-y-4'>
-				<div className='space-y-2'>
-					<dl className='flex items-center justify-between gap-4'>
-						<dt className='text-base font-normal text-gray-600'>Original price</dt>
-						<dd className='text-base font-medium text-gray-900'>R{formattedSubtotal}</dd>
-					</dl>
-
-					{savings > 0 && (
-						<dl className='flex items-center justify-between gap-4'>
-							<dt className='text-base font-normal text-gray-600'>Savings</dt>
-							<dd className='text-base font-medium text-red-600'>-R{formattedSavings}</dd>
-						</dl>
-					)}
-
-					{coupon && isCouponApplied && (
-						<dl className='flex items-center justify-between gap-4'>
-							<dt className='text-base font-normal text-gray-600'>Coupon ({coupon.code})</dt>
-							<dd className='text-base font-medium text-red-600'>-{coupon.discountPercentage}%</dd>
-						</dl>
-					)}
-					<dl className='flex items-center justify-between gap-4 border-t border-gray-200 pt-2'>
-						<dt className='text-base font-bold text-gray-900'>Total</dt>
-						<dd className='text-base font-bold text-red-600'>R{formattedTotal}</dd>
-					</dl>
+			<dl className='space-y-2.5 text-[15px]'>
+				<div className='flex items-center justify-between gap-4'>
+					<dt className='text-muted'>Subtotal</dt>
+					<dd className='font-medium text-ink'>R{formattedSubtotal}</dd>
 				</div>
 
-				<motion.button
-					className='flex w-full items-center justify-center rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 disabled:opacity-50'
-					whileHover={{ scale: 1.05 }}
-					whileTap={{ scale: 0.95 }}
-					onClick={handlePayment}
-					disabled={isProcessing}
-				>
-					{isProcessing ? "Processing..." : "Proceed to Checkout"}
-				</motion.button>
+				{savings > 0 && (
+					<div className='flex items-center justify-between gap-4'>
+						<dt className='text-muted'>Savings</dt>
+						<dd className='font-medium text-brand'>-R{formattedSavings}</dd>
+					</div>
+				)}
 
-				<div className='flex items-center justify-center gap-2'>
-					<span className='text-sm font-normal text-gray-500'>or</span>
-					<Link
-						to='/'
-						className='inline-flex items-center gap-2 text-sm font-medium text-red-600 underline hover:text-red-700 hover:no-underline'
-					>
-						Continue Shopping
-						<MoveRight size={16} />
-					</Link>
-				</div>
+				{coupon && isCouponApplied && (
+					<div className='flex items-center justify-between gap-4'>
+						<dt className='text-muted'>Coupon ({coupon.code})</dt>
+						<dd className='font-medium text-brand'>-{coupon.discountPercentage}%</dd>
+					</div>
+				)}
+			</dl>
+
+			<div className='mt-4 flex items-center justify-between border-t border-black/10 pt-4 text-lg font-bold text-ink'>
+				<span>Total</span>
+				<span>R{formattedTotal}</span>
 			</div>
-		</motion.div>
+
+			<button
+				className='mt-5 flex h-14 w-full items-center justify-center rounded-lg bg-brand text-base font-semibold text-white transition-colors hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-red-200 disabled:opacity-50'
+				onClick={handlePayment}
+				disabled={isProcessing}
+			>
+				{isProcessing ? "Processing..." : "Proceed to Checkout"}
+			</button>
+
+			<p className='mt-3 text-center text-[13px] text-muted'>Secure payment via Paystack</p>
+
+			<p className='mt-4 text-center text-sm text-muted'>
+				or{" "}
+				<Link to='/' className='font-medium text-brand underline hover:text-brand-dark hover:no-underline'>
+					Continue shopping →
+				</Link>
+			</p>
+		</div>
 	);
 };
 export default OrderSummary;

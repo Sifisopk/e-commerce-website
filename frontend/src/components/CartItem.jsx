@@ -1,79 +1,72 @@
-import { Minus, Plus, Trash } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCartStore } from "../stores/useCartStore";
+
+const stepperButton =
+	"flex h-9 w-9 items-center justify-center rounded-lg border border-line bg-white text-ink transition-colors hover:border-ink focus:outline-none focus:ring-2 focus:ring-brand";
 
 const CartItem = ({ item }) => {
  const { removeFromCart, updateQuantity } = useCartStore();
 
- 
 	return (
-		<div className='rounded-lg border p-4 shadow-sm border-gray-200 bg-white md:p-6'>
-			<div className='space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0'>
-				<div className='shrink-0 md:order-1'>
-					<Link to={`/product/${item._id}`}>
-						<img className='h-20 md:h-32 rounded object-cover' src={item.images?.[0]} />
-					</Link>
-				</div>
-				<label className='sr-only'>Choose quantity:</label>
+		<div className='flex gap-4 rounded-xl border border-line bg-white p-4 sm:gap-5 sm:p-5'>
+			<Link to={`/product/${item._id}`} className='block h-28 w-24 shrink-0 overflow-hidden rounded-lg bg-surface sm:h-36 sm:w-28'>
+				<img className='h-full w-full object-cover' src={item.images?.[0]} alt={item.name} />
+			</Link>
 
-				<div className='flex items-center justify-between md:order-3 md:justify-end'>
-					<div className='flex items-center gap-2'>
-						<button
-							className='inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border
-							 border-gray-300 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2
-							  focus:ring-red-400'
-							onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
-						>
-							<Minus className='text-gray-700' />
-						</button>
-						<p className='text-gray-900'>{item.quantity}</p>
-						<button
-							className='inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border
-							 border-gray-300 bg-white hover:bg-gray-50 focus:outline-none 
-						focus:ring-2 focus:ring-red-400'
-							onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
-						>
-							<Plus className='text-gray-700' />
-						</button>
+			<div className='flex min-w-0 flex-1 flex-col justify-between gap-3'>
+				<div>
+					<div className='flex items-start justify-between gap-3'>
+						<Link to={`/product/${item._id}`}>
+							<p className='font-semibold leading-snug text-ink transition-colors hover:text-brand sm:text-lg'>
+								{item.name}
+							</p>
+						</Link>
+						<p className='shrink-0 font-bold text-ink'>R{item.price}</p>
 					</div>
 
-					<div className='text-end md:order-4 md:w-32'>
-						<p className='text-base font-bold text-red-600'>R{item.price}</p>
-					</div>
-				</div>
-
-				<div className='w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md'>
-					<Link to={`/product/${item._id}`}>
-						<p className='text-base font-medium text-gray-900 hover:text-red-600 hover:underline'>
-							{item.name}
-						</p>
-					</Link>
+					{/* start of colour and size */}
 					{(item.color || item.size) && (
-						<p className='text-sm text-gray-600 flex items-center gap-2'>
+						<p className='mt-1.5 flex flex-wrap items-center gap-x-2 text-sm text-muted'>
 							{item.color && (
 								<span className='flex items-center gap-1.5 capitalize'>
 									<span
-										className='inline-block h-3.5 w-3.5 rounded-full border border-gray-300'
+										className='inline-block h-3.5 w-3.5 rounded-full border border-line'
 										style={{ backgroundColor: item.color.toLowerCase() }}
 									/>
 									{item.color}
 								</span>
 							)}
 							{item.color && item.size && <span>·</span>}
-							{item.size && <span className='uppercase'>Size: {item.size}</span>}
+							{item.size && <span className='uppercase'>Size {item.size}</span>}
 						</p>
 					)}
-					<p className='text-sm text-gray-500'>{item.description}</p>
+					{/* end of colour and size */}
+				</div>
 
-					<div className='flex items-center gap-4'>
-						<button
-							className='inline-flex items-center text-sm font-medium text-red-600
-							 hover:text-red-700 hover:underline'
-							onClick={() => removeFromCart(item.cartItemId)}
-						>
-							<Trash />
-						</button>
-					</div>
+				<div className='flex items-center gap-3'>
+					<button
+						className={stepperButton}
+						aria-label='Decrease quantity'
+						onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
+					>
+						<Minus size={16} />
+					</button>
+					<span className='min-w-[1.25rem] text-center font-semibold text-ink'>{item.quantity}</span>
+					<button
+						className={stepperButton}
+						aria-label='Increase quantity'
+						onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
+					>
+						<Plus size={16} />
+					</button>
+
+					<button
+						className='ml-auto text-sm text-muted underline transition-colors hover:text-brand'
+						onClick={() => removeFromCart(item.cartItemId)}
+					>
+						Remove
+					</button>
 				</div>
 			</div>
 		</div>

@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { useCartStore } from "../stores/useCartStore";
-import {motion} from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import OrderSummary from "../components/OrderSummary";
 import CartItem from "../components/CartItem";
 import PeopleAlsoBought from "../components/PeopleAlsoBought";
 import GiftCouponCard from "../components/GiftCouponCard";
 import AddressCard from "../components/AddressCard";
+import VerifyEmailBanner from "../components/VerifyEmailBanner";
 import { COUPONS_ENABLED } from "../config/features";
 
 
@@ -14,40 +14,40 @@ const CartPage = () => {
 const {cart} = useCartStore();
 
 	return (
-		<div className='py-8 md:py-16 bg-white min-h-screen'>
-			<div className='mx-auto max-w-screen-xl px-4 2xl:px-0'>
-				<div className='mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8'>
-					<motion.div
-						className='mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl'
-						initial={{ opacity: 0, x: -20 }}
-						animate={{ opacity: 1, x: 0 }}
-						transition={{ duration: 0.5, delay: 0.2 }}
-					>
-						{cart.length === 0 ? (
-							<EmptyCartUI />
-						) : (
-							<div className='space-y-6'>
-						{cart.map((item) => (
-							<CartItem key={item.cartItemId} item={item} />
-						))}
+		<div className='min-h-[70vh] bg-white'>
+			<div className='mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8'>
+				<VerifyEmailBanner />
+
+				<h1 className='mb-8 font-display text-3xl font-bold tracking-tight sm:text-4xl'>
+					Your cart
+					{cart.length > 0 && <span className='ml-2 text-xl font-medium text-muted'>({cart.length})</span>}
+				</h1>
+
+				{cart.length === 0 ? (
+					<EmptyCartUI />
+				) : (
+					<>
+						<div className='grid items-start gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-10'>
+							{/* start of items */}
+							<div className='space-y-4'>
+								{cart.map((item) => (
+									<CartItem key={item.cartItemId} item={item} />
+								))}
 							</div>
-						)}
-						{cart.length > 0 && <PeopleAlsoBought />}
-					</motion.div>
-						{cart.length > 0 && (
-						<motion.div
-							className='mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full'
-							initial={{ opacity: 0, x: 20 }}
-							animate={{ opacity: 1, x: 0 }}
-							transition={{ duration: 0.5, delay: 0.4 }}
-						>
-							<AddressCard />
-							<OrderSummary />
-							{COUPONS_ENABLED && <GiftCouponCard />}
-						</motion.div>
-					)}
-				
-				</div>
+							{/* end of items */}
+
+							{/* start of address and summary (address first, so it is filled in before checkout) */}
+							<div className='space-y-5'>
+								<AddressCard />
+								<OrderSummary />
+								{COUPONS_ENABLED && <GiftCouponCard />}
+							</div>
+							{/* end of address and summary */}
+						</div>
+
+						<PeopleAlsoBought />
+					</>
+				)}
 			</div>
 		</div>
 	);
@@ -55,20 +55,15 @@ const {cart} = useCartStore();
 export default CartPage;
 
 const EmptyCartUI = () => (
-	<motion.div
-		className='flex flex-col items-center justify-center space-y-4 py-16'
-		initial={{ opacity: 0, y: 20 }}
-		animate={{ opacity: 1, y: 0 }}
-		transition={{ duration: 0.5 }}
-	>
-		<ShoppingCart className='h-24 w-24 text-gray-300' />
-		<h3 className='text-2xl font-semibold text-gray-900'>Your cart is empty</h3>
-		<p className='text-gray-500'>Looks like you {"haven't"} added anything to your cart yet.</p>
+	<div className='flex flex-col items-center justify-center space-y-4 py-16 text-center'>
+		<ShoppingCart className='h-20 w-20 text-gray-300' />
+		<h2 className='font-display text-2xl font-bold text-ink'>Your cart is empty</h2>
+		<p className='text-muted'>Looks like you {"haven't"} added anything to your cart yet.</p>
 		<Link
-			className='mt-4 rounded-md bg-red-600 px-6 py-2 text-white transition-colors hover:bg-red-700'
+			className='mt-2 rounded-lg bg-brand px-7 py-3.5 font-semibold text-white transition-colors hover:bg-brand-dark'
 			to='/'
 		>
-			Start Shopping
+			Start shopping
 		</Link>
-	</motion.div>
+	</div>
 );

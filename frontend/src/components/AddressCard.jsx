@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-import { MapPin } from "lucide-react";
 import { useCheckoutStore } from "../stores/useCheckoutStore";
 
 const PROVINCES = [
@@ -14,12 +12,13 @@ const PROVINCES = [
 	"Western Cape",
 ];
 
+// one input style for the whole form
 const inputClass =
-	"block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-red-500 focus:ring-red-500";
+	"block h-11 w-full rounded-lg border border-[#D9D6D2] bg-white px-3 text-sm text-ink placeholder-gray-400 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand";
 
-const Field = ({ label, id, children }) => (
-	<div>
-		<label htmlFor={id} className='mb-1 block text-sm font-medium text-gray-700'>
+const Field = ({ label, id, className = "", children }) => (
+	<div className={className}>
+		<label htmlFor={id} className='mb-1.5 block text-[13px] font-semibold text-ink'>
 			{label}
 		</label>
 		{children}
@@ -30,18 +29,10 @@ const AddressCard = () => {
 	const { shippingAddress, setShippingField } = useCheckoutStore();
 
 	return (
-		<motion.div
-			className='space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6'
-			initial={{ opacity: 0, y: 20 }}
-			animate={{ opacity: 1, y: 0 }}
-			transition={{ duration: 0.5 }}
-		>
-			<div className='flex items-center gap-2'>
-				<MapPin className='h-5 w-5 text-red-600' />
-				<h3 className='text-xl font-semibold text-gray-900'>Delivery address</h3>
-			</div>
+		<div className='rounded-xl border border-line bg-white p-5 sm:p-6'>
+			<h2 className='mb-5 font-display text-xl font-bold text-ink'>Delivery address</h2>
 
-			<div className='space-y-3'>
+			<div className='grid grid-cols-1 gap-3.5 sm:grid-cols-2'>
 				<Field label='Full name' id='fullName'>
 					<input
 						id='fullName'
@@ -68,7 +59,7 @@ const AddressCard = () => {
 					/>
 				</Field>
 
-				<Field label='Street address' id='street'>
+				<Field label='Street address' id='street' className='sm:col-span-2'>
 					<input
 						id='street'
 						type='text'
@@ -81,66 +72,62 @@ const AddressCard = () => {
 					/>
 				</Field>
 
-				<div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
-					<Field label='Suburb' id='suburb'>
-						<input
-							id='suburb'
-							type='text'
-							autoComplete='address-line2'
-							maxLength={50}
-							className={inputClass}
-							value={shippingAddress.suburb}
-							onChange={(e) => setShippingField("suburb", e.target.value)}
-						/>
-					</Field>
+				<Field label='Suburb' id='suburb'>
+					<input
+						id='suburb'
+						type='text'
+						autoComplete='address-line2'
+						maxLength={50}
+						className={inputClass}
+						value={shippingAddress.suburb}
+						onChange={(e) => setShippingField("suburb", e.target.value)}
+					/>
+				</Field>
 
-					<Field label='City / Town' id='city'>
-						<input
-							id='city'
-							type='text'
-							autoComplete='address-level2'
-							maxLength={50}
-							className={inputClass}
-							value={shippingAddress.city}
-							onChange={(e) => setShippingField("city", e.target.value)}
-						/>
-					</Field>
-				</div>
+				<Field label='City / Town' id='city'>
+					<input
+						id='city'
+						type='text'
+						autoComplete='address-level2'
+						maxLength={50}
+						className={inputClass}
+						value={shippingAddress.city}
+						onChange={(e) => setShippingField("city", e.target.value)}
+					/>
+				</Field>
 
-				<div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
-					<Field label='Province' id='province'>
-						<select
-							id='province'
-							autoComplete='address-level1'
-							className={inputClass}
-							value={shippingAddress.province}
-							onChange={(e) => setShippingField("province", e.target.value)}
-						>
-							<option value=''>Select province</option>
-							{PROVINCES.map((province) => (
-								<option key={province} value={province}>
-									{province}
-								</option>
-							))}
-						</select>
-					</Field>
+				<Field label='Province' id='province'>
+					<select
+						id='province'
+						autoComplete='address-level1'
+						className={inputClass}
+						value={shippingAddress.province}
+						onChange={(e) => setShippingField("province", e.target.value)}
+					>
+						<option value=''>Select province</option>
+						{PROVINCES.map((province) => (
+							<option key={province} value={province}>
+								{province}
+							</option>
+						))}
+					</select>
+				</Field>
 
-					<Field label='Postal code' id='postalCode'>
-						<input
-							id='postalCode'
-							type='text'
-							inputMode='numeric'
-							autoComplete='postal-code'
-							maxLength={4}
-							className={inputClass}
-							placeholder='2000'
-							value={shippingAddress.postalCode}
-							onChange={(e) => setShippingField("postalCode", e.target.value.replace(/\D/g, ""))}
-						/>
-					</Field>
-				</div>
+				<Field label='Postal code' id='postalCode'>
+					<input
+						id='postalCode'
+						type='text'
+						inputMode='numeric'
+						autoComplete='postal-code'
+						maxLength={4}
+						className={inputClass}
+						placeholder='2000'
+						value={shippingAddress.postalCode}
+						onChange={(e) => setShippingField("postalCode", e.target.value.replace(/\D/g, ""))}
+					/>
+				</Field>
 			</div>
-		</motion.div>
+		</div>
 	);
 };
 

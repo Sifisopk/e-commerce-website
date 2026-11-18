@@ -10,7 +10,9 @@ import { mailtoHref } from "../config/contact";
 const SUPPORT_HREF = mailtoHref("Support request"); // details live in config/contact.js
 
 const mobileItem =
-    "flex w-full items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-gray-50 hover:text-red-600 transition-colors";
+    "flex w-full items-center gap-3 px-5 py-4 text-left text-lg font-semibold text-ink transition-colors hover:text-brand";
+const desktopLink =
+    "flex items-center gap-1.5 text-[15px] font-medium text-ink transition-colors hover:text-brand";
 
 const Navbar = () => {
     const { user, logout } = useUserStore();
@@ -51,15 +53,11 @@ const Navbar = () => {
     };
 
     const cartLink = user && (
-        <Link
-            to='/cart'
-            aria-label='Cart'
-            className='relative group text-gray-700 hover:text-red-600 transition duration-300 ease-in-out'
-        >
-            <ShoppingCart className='inline-block mr-1 group-hover:text-red-600' size={22} />
+        <Link to='/cart' aria-label='Cart' className={`relative p-2 md:p-0 ${desktopLink}`}>
+            <ShoppingCart size={22} />
             <span className='hidden md:inline'>Cart</span>
             {cart.length > 0 && (
-                <span className='absolute -top-2 -left-2 bg-red-600 text-white rounded-full px-2 py-0.5 text-xs group-hover:bg-red-500 transition duration-300 ease-in-out'>
+                <span className='absolute left-0 top-0 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brand px-1 text-[11px] font-semibold text-white md:-left-2 md:-top-2'>
                     {cart.length}
                 </span>
             )}
@@ -67,21 +65,18 @@ const Navbar = () => {
     );
 
     return (
-        <header className='fixed top-0 left-0 w-full bg-white shadow-sm z-40 transition-all duration-300 border-b border-gray-200'>
-            <div className='container mx-auto px-4 py-3'>
-                <div className='flex justify-between items-center gap-2'>
-                    <Link to='/' className='text-2xl font-bold text-red-600 flex items-center'>
-                        Superfineboy
+        <header className='sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur'>
+            <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+                <div className='flex h-16 items-center justify-between gap-2'>
+                    <Link to='/' className='font-display text-2xl font-bold tracking-tight text-ink'>
+                        Superfine<span className='text-brand'>boy</span>
                     </Link>
 
                     {/* start of desktop nav (md and up) */}
-                    <nav className='hidden md:flex items-center gap-4'>
-                        <Link
-                            to='/track-order'
-                            className='flex items-center text-gray-700 hover:text-red-600 transition duration-300 ease-in-out'
-                        >
-                            <PackageSearch className='mr-1' size={18} />
-                            Track Order
+                    <nav className='hidden items-center gap-6 md:flex'>
+                        <Link to='/track-order' className={desktopLink}>
+                            <PackageSearch size={18} />
+                            Track order
                         </Link>
 
                         {cartLink}
@@ -89,45 +84,45 @@ const Navbar = () => {
                         {isAdmin && (
                             <Link
                                 to='/secret-dashboard'
-                                className='bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md font-medium transition duration-300 ease-in-out flex items-center'
+                                className='flex items-center gap-1.5 rounded-lg bg-ink px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-black'
                             >
-                                <Lock className='inline-block mr-1' size={18} />
+                                <Lock size={16} />
                                 Dashboard
                             </Link>
                         )}
 
                         {/* start of logged in as (desktop) */}
                         {user && (
-                            <div className='max-w-[160px] lg:max-w-[240px] text-right leading-tight' title={user.email}>
-                                <p className='text-xs text-gray-500'>Logged in as</p>
-                                <p className='truncate text-sm font-medium text-gray-900'>{user.email}</p>
+                            <div className='max-w-[160px] text-right leading-tight lg:max-w-[240px]' title={user.email}>
+                                <p className='text-xs text-muted'>Logged in as</p>
+                                <p className='truncate text-sm font-medium text-ink'>{user.email}</p>
                             </div>
                         )}
                         {/* end of logged in as (desktop) */}
 
                         {user ? (
                             <button
-                                className='bg-gray-900 hover:bg-black text-white py-2 px-4 rounded-md flex items-center transition duration-300 ease-in-out'
                                 onClick={logout}
+                                className='flex items-center gap-2 rounded-lg border border-ink px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-white'
                             >
-                                <LogOut size={18} />
-                                <span className='ml-2'>Log out</span>
+                                <LogOut size={16} />
+                                Log out
                             </button>
                         ) : (
                             <>
                                 <Link
-                                    to='/signup'
-                                    className='bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md flex items-center transition duration-300 ease-in-out'
+                                    to='/login'
+                                    className='flex items-center gap-2 rounded-lg border border-line px-4 py-2 text-sm font-semibold text-ink transition-colors hover:border-ink'
                                 >
-                                    <UserPlus className='mr-2' size={18} />
-                                    Sign up
+                                    <LogIn size={16} />
+                                    Login
                                 </Link>
                                 <Link
-                                    to='/login'
-                                    className='border border-gray-300 hover:bg-gray-50 text-gray-700 py-2 px-4 rounded-md flex items-center transition duration-300 ease-in-out'
+                                    to='/signup'
+                                    className='flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-dark'
                                 >
-                                    <LogIn className='mr-2' size={18} />
-                                    Login
+                                    <UserPlus size={16} />
+                                    Sign up
                                 </Link>
                             </>
                         )}
@@ -135,7 +130,7 @@ const Navbar = () => {
                     {/* end of desktop nav */}
 
                     {/* start of mobile controls (below md): cart stays outside the hamburger */}
-                    <div className='flex md:hidden items-center gap-4' ref={menuRef}>
+                    <div className='flex items-center gap-1 md:hidden' ref={menuRef}>
                         {cartLink}
 
                         <button
@@ -144,7 +139,7 @@ const Navbar = () => {
                             aria-label={menuOpen ? "Close menu" : "Open menu"}
                             aria-expanded={menuOpen}
                             aria-controls='mobile-menu'
-                            className='p-1.5 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500'
+                            className='rounded-lg p-2.5 text-ink hover:bg-surface focus:outline-none focus:ring-2 focus:ring-brand'
                         >
                             {menuOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
@@ -152,14 +147,14 @@ const Navbar = () => {
                         {menuOpen && (
                             <div
                                 id='mobile-menu'
-                                className='absolute left-0 right-0 top-full bg-white border-b border-gray-200 shadow-lg'
+                                className='absolute left-0 right-0 top-full border-b border-line bg-white shadow-lg'
                             >
-                                <div className='py-2 divide-y divide-gray-100'>
+                                <div className='divide-y divide-line py-1'>
                                     {/* start of logged in as */}
                                     {user && (
-                                        <div className='px-4 py-3'>
-                                            <p className='text-xs text-gray-500'>Logged in as</p>
-                                            <p className='text-sm font-medium text-gray-900 break-all'>{user.email}</p>
+                                        <div className='px-5 py-4'>
+                                            <p className='text-xs text-muted'>Logged in as</p>
+                                            <p className='break-all text-sm font-medium text-ink'>{user.email}</p>
                                         </div>
                                     )}
                                     {/* end of logged in as */}
@@ -167,13 +162,16 @@ const Navbar = () => {
                                     <div>
                                         <Link to='/track-order' className={mobileItem}>
                                             <PackageSearch size={20} />
-                                            Track Order
+                                            Track order
                                         </Link>
 
                                         {isAdmin && (
                                             <Link to='/secret-dashboard' className={mobileItem}>
                                                 <Lock size={20} />
                                                 Dashboard
+                                                <span className='ml-auto text-xs font-semibold tracking-wider text-brand'>
+                                                    ADMIN ONLY
+                                                </span>
                                             </Link>
                                         )}
                                     </div>
@@ -181,7 +179,7 @@ const Navbar = () => {
                                     <div>
                                         <a href={SUPPORT_HREF} className={mobileItem}>
                                             <LifeBuoy size={20} />
-                                            Contact Support
+                                            Contact support
                                         </a>
                                     </div>
 
