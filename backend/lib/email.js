@@ -20,17 +20,20 @@ const escapeHtml = (v) =>
 
 const money = (n) => `R${Number(n).toFixed(2)}`;
 
-const PRODUCTION_APP_URL = "https://superfineboy.co.za";
+// start of shop address used in email links
+const PUBLIC_SITE_URL = "https://superfineboy.co.za"; // safety net, only used on the live site
 const appUrl = () => {
-    const clientUrl = String(process.env.CLIENT_URL || "").trim().replace(/\/+$/, "");
-    const isLocalUrl = /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?(?:\/|$)/i.test(clientUrl);
+    const configured = String(process.env.CLIENT_URL || "").replace(/\/$/, "");
+    const isLocal = !configured || /localhost|127\.0\.0\.1/.test(configured);
 
-    if (process.env.NODE_ENV === "production" && (!clientUrl || isLocalUrl)) {
-        return PRODUCTION_APP_URL;
+    // on the live site an email must never link to localhost, even if CLIENT_URL was left on a local value
+    if (isLocal && process.env.NODE_ENV === "production") {
+        console.log(`CLIENT_URL is "${configured}" in production, using ${PUBLIC_SITE_URL} for email links. Please fix CLIENT_URL.`);
+        return PUBLIC_SITE_URL;
     }
-
-    return clientUrl;
+    return configured;
 };
+// end of shop address used in email links
 
 // start of building blocks (tables + inline styles: the only layout every email app understands)
 const footerHtml = () =>
